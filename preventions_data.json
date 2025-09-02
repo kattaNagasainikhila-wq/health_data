@@ -1,0 +1,356 @@
+{
+  "disease_preventions": [
+    {
+      "name": "Malaria",
+      "preventions": [
+        "Use mosquito nets while sleeping",
+        "Apply insect repellent on exposed skin",
+        "Eliminate standing water around homes",
+        "Take antimalarial medication if prescribed"
+      ]
+    },
+    {
+      "name": "Tuberculosis",
+      "preventions": [
+        "Ensure proper ventilation in living spaces",
+        "Wear masks in crowded areas",
+        "Cover mouth while coughing or sneezing",
+        "Complete full course of TB vaccination and treatment"
+      ]
+    },
+    {
+      "name": "COVID-19",
+      "preventions": [
+        "Wear masks in public places",
+        "Maintain social distancing",
+        "Wash hands frequently with soap",
+        "Get vaccinated and follow booster recommendations",
+        "Avoid crowded and poorly ventilated spaces"
+      ]
+    },
+    {
+      "name": "Influenza",
+      "preventions": [
+        "Get annual flu vaccination",
+        "Wash hands frequently",
+        "Avoid close contact with sick people",
+        "Cover mouth while coughing or sneezing"
+      ]
+    },
+    {
+      "name": "Dengue Fever",
+      "preventions": [
+        "Use mosquito repellent and nets",
+        "Remove stagnant water around living areas",
+        "Wear long-sleeved clothing",
+        "Keep surroundings clean to prevent mosquito breeding"
+      ]
+    },
+    {
+      "name": "Cholera",
+      "preventions": [
+        "Drink clean and boiled water",
+        "Wash hands before eating",
+        "Properly cook food",
+        "Sanitize kitchen and utensils",
+        "Avoid raw or contaminated food"
+      ]
+    },
+    {
+      "name": "Typhoid Fever",
+      "preventions": [
+        "Drink safe water",
+        "Avoid street food and unwashed fruits",
+        "Wash hands regularly",
+        "Get vaccinated if traveling to high-risk areas"
+      ]
+    },
+    {
+      "name": "Asthma",
+      "preventions": [
+        "Avoid exposure to allergens and irritants",
+        "Use prescribed inhalers regularly",
+        "Maintain clean living environment",
+        "Avoid smoking and secondhand smoke"
+      ]
+    },
+    {
+      "name": "Pneumonia",
+      "preventions": [
+        "Get vaccinated (pneumococcal and flu vaccines)",
+        "Practice good hygiene",
+        "Avoid smoking and polluted environments",
+        "Maintain healthy nutrition"
+      ]
+    },
+    {
+      "name": "Measles",
+      "preventions": [
+        "Get vaccinated with MMR vaccine",
+        "Avoid contact with infected individuals",
+        "Practice good hygiene"
+      ]
+    },
+    {
+      "name": "Mumps",
+      "preventions": [
+        "Get MMR vaccination",
+        "Avoid close contact with infected people",
+        "Maintain personal hygiene"
+      ]
+    },
+    {
+      "name": "Rubella",
+      "preventions": [
+        "Get MMR vaccination",
+        "Avoid contact with infected individuals",
+        "Maintain good hygiene"
+      ]
+    },
+    {
+      "name": "Chickenpox",
+      "preventions": [
+        "Get vaccinated against chickenpox",
+        "Avoid close contact with infected individuals",
+        "Practice good hygiene"
+      ]
+    },
+    {
+      "name": "Hepatitis A",
+      "preventions": [
+        "Drink clean water",
+        "Avoid raw or undercooked food",
+        "Wash hands before eating",
+        "Get vaccinated against Hepatitis A"
+      ]
+    },
+    {
+      "name": "Hepatitis B",
+      "preventions": [
+        "Get vaccinated against Hepatitis B",
+        "Avoid sharing needles or personal items",
+        "Practice safe sex",
+        "Ensure blood products are screened"
+      ]
+    },
+    {
+      "name": "Hepatitis C",
+      "preventions": [
+        "Avoid sharing needles and syringes",
+        "Practice safe sex",
+        "Ensure blood products are screened",
+        "Avoid unsterilized tattoos or piercings"
+      ]
+    },
+    {
+      "name": "Ebola Virus Disease",
+      "preventions": [
+        "Avoid contact with infected people and animals",
+        "Use protective equipment when caring for patients",
+        "Practice safe burial procedures",
+        "Wash hands frequently"
+      ]
+    },
+    {
+      "name": "Zika Virus",
+      "preventions": [
+        "Use mosquito repellent and nets",
+        "Remove stagnant water to prevent mosquito breeding",
+        "Wear protective clothing",
+        "Avoid travel to high-risk areas if pregnant"
+      ]
+    },
+    {
+      "name": "Yellow Fever",
+      "preventions": [
+        "Get vaccinated against Yellow Fever",
+        "Use mosquito repellents and nets",
+        "Wear long-sleeved clothing",
+        "Eliminate mosquito breeding sites"
+      ]
+    },
+    {
+      "name": "Polio",
+      "preventions": [
+        "Get vaccinated with IPV or OPV",
+        "Practice good hand hygiene",
+        "Drink safe water",
+        "Maintain sanitary conditions"
+      ]
+    },
+    {
+      "name": "Leprosy",
+      "preventions": [
+        "Early detection and treatment of patients",
+        "Avoid prolonged close contact with untreated patients",
+        "Maintain good hygiene"
+      ]
+    },
+    {
+      "name": "Rabies",
+      "preventions": [
+        "Vaccinate pets against rabies",
+        "Avoid contact with stray animals",
+        "Wash bites and seek immediate medical care",
+        "Get post-exposure prophylaxis if bitten"
+      ]
+    },
+    {
+      "name": "Plague",
+      "preventions": [
+        "Avoid contact with wild rodents",
+        "Use insect repellent to prevent flea bites",
+        "Practice good hygiene",
+        "Prompt treatment if exposed"
+      ]
+    },
+    {
+      "name": "Lyme Disease",
+      "preventions": [
+        "Use tick repellents and protective clothing",
+        "Check body for ticks after outdoor activities",
+        "Remove ticks promptly and properly",
+        "Keep grassy areas trimmed"
+      ]
+    },
+    {
+      "name": "Smallpox",
+      "preventions": [
+        "Vaccination (no longer routine, but key historically)",
+        "Avoid contact with infected individuals",
+        "Practice isolation if exposed"
+      ]
+    },
+    {
+      "name": "Anthrax",
+      "preventions": [
+        "Avoid contact with infected animals",
+        "Use protective equipment when handling livestock",
+        "Vaccinate livestock if in endemic areas",
+        "Dispose of animal carcasses safely"
+      ]
+    },
+    {
+      "name": "H1N1 Influenza",
+      "preventions": [
+        "Get annual flu vaccination",
+        "Practice good hand hygiene",
+        "Avoid close contact with sick people",
+        "Cover mouth while coughing or sneezing"
+      ]
+    },
+    {
+      "name": "Scarlet Fever",
+      "preventions": [
+        "Avoid close contact with infected individuals",
+        "Maintain good hygiene",
+        "Prompt treatment of strep infections"
+      ]
+    },
+    {
+      "name": "Meningitis",
+      "preventions": [
+        "Get vaccinated (meningococcal vaccine)",
+        "Avoid close contact with infected individuals",
+        "Practice good hygiene"
+      ]
+    },
+    {
+      "name": "Tetanus",
+      "preventions": [
+        "Get vaccinated against tetanus",
+        "Clean wounds thoroughly",
+        "Seek medical care for deep cuts or injuries"
+      ]
+    },
+    {
+      "name": "Poliomyelitis",
+      "preventions": [
+        "Get vaccinated (IPV or OPV)",
+        "Practice good hygiene",
+        "Drink safe water"
+      ]
+    },
+    {
+      "name": "Whooping Cough",
+      "preventions": [
+        "Get DTaP/Tdap vaccination",
+        "Avoid contact with infected individuals",
+        "Practice good hygiene"
+      ]
+    },
+    {
+      "name": "Rotavirus Infection",
+      "preventions": [
+        "Get vaccinated against rotavirus",
+        "Wash hands frequently",
+        "Sanitize toys and surfaces",
+        "Drink safe water"
+      ]
+    },
+    {
+      "name": "Norovirus Infection",
+      "preventions": [
+        "Wash hands thoroughly",
+        "Sanitize surfaces regularly",
+        "Avoid contaminated food and water",
+        "Isolate infected individuals"
+      ]
+    },
+    {
+      "name": "Giardiasis",
+      "preventions": [
+        "Drink treated or boiled water",
+        "Wash hands before eating",
+        "Avoid swallowing untreated water from lakes or rivers",
+        "Practice good hygiene"
+      ]
+    },
+    {
+      "name": "Hookworm Infection",
+      "preventions": [
+        "Wear shoes outdoors",
+        "Avoid contact with contaminated soil",
+        "Practice good sanitation",
+        "Treat infected individuals promptly"
+      ]
+    },
+    {
+      "name": "Ascariasis",
+      "preventions": [
+        "Wash hands before eating",
+        "Avoid consuming raw or unwashed vegetables",
+        "Practice good sanitation",
+        "Deworm periodically"
+      ]
+    },
+    {
+      "name": "Trichuriasis",
+      "preventions": [
+        "Maintain proper sanitation",
+        "Wash hands regularly",
+        "Avoid contaminated food and water",
+        "Periodic deworming"
+      ]
+    },
+    {
+      "name": "Schistosomiasis",
+      "preventions": [
+        "Avoid swimming in freshwater in endemic areas",
+        "Use safe water for drinking and bathing",
+        "Wear protective clothing",
+        "Periodic treatment in endemic areas"
+      ]
+    },
+    {
+      "name": "Toxoplasmosis",
+      "preventions": [
+        "Cook meat thoroughly",
+        "Wash fruits and vegetables",
+        "Avoid contact with cat feces",
+        "Practice good hygiene"
+      ]
+    }
+  ]
+}
+
