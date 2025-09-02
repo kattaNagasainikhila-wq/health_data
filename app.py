@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 # Raw GitHub URLs of your files
 DISEASES_URL = "https://github.com/kattaNagasainikhila-wq/health_data/blob/main/diseases_data.json"
-SYMPTOMS_URL = 
+SYMPTOMS_URL = "https://github.com/kattaNagasainikhila-wq/health_data/blob/main/preventions_data.json"
 PREVENTIONS_URL = 
 # Function to load JSON from GitHub
 def load_json(url):
