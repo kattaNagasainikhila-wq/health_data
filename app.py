@@ -7,7 +7,7 @@ app = Flask(__name__)
 # ---------- GITHUB RAW FILES ----------
 DISEASES_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/diseases.json"
 SYMPTOMS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/symptoms.json"
-#PREVENTIONS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/preventions.json"
+PREVENTIONS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/preventions.json"
 
 # Cache for GitHub JSON to avoid fetching every time
 data_cache = {}
@@ -43,10 +43,10 @@ def get_symptoms(disease_name):
     data = fetch_json(SYMPTOMS_URL)
     return data.get(disease_name, [])
 
-"""def get_preventions(disease_name):
+def get_preventions(disease_name):
     Get prevention list from prevention JSON.
     data = fetch_json(PREVENTIONS_URL)
-    return data.get(disease_name, [])"""
+    return data.get(disease_name, [])
 
 # ================== WEBHOOK ==================
 @app.route("/webhook", methods=["POST"])
