@@ -58,5 +58,165 @@
   },
   "Common cold": {
     "synonyms": ["Cold", "Upper respiratory infection", "URI"]
+  },
+  "Alzheimer's disease": {
+    "synonyms": ["AD", "Senile dementia", "Alzheimer dementia"]
+  },
+  "Parkinson's disease": {
+    "synonyms": ["PD", "Paralysis agitans", "Shaking palsy"]
+  },
+  "Stroke": {
+    "synonyms": ["Cerebrovascular accident", "CVA", "Brain attack"]
+  },
+  "Epilepsy": {
+    "synonyms": ["Seizure disorder", "Convulsive disorder"]
+  },
+  "Migraine": {
+    "synonyms": ["Vascular headache", "Neurological headache"]
+  },
+  "Leprosy": {
+    "synonyms": ["Hansen's disease", "Mycobacterium leprae infection"]
+  },
+  "Rabies": {
+    "synonyms": ["Hydrophobia", "Lyssa"]
+  },
+  "Tetanus": {
+    "synonyms": ["Lockjaw", "Clostridium tetani infection"]
+  },
+  "Yellow fever": {
+    "synonyms": ["YF", "Flavivirus fever"]
+  },
+  "Scarlet fever": {
+    "synonyms": ["Scarlatina", "Group A Streptococcus infection"]
+  },
+  "Whooping cough": {
+    "synonyms": ["Pertussis", "Bordetella pertussis infection"]
+  },
+  "Syphilis": {
+    "synonyms": ["Treponema pallidum infection", "Lues"]
+  },
+  "Gonorrhea": {
+    "synonyms": ["Clap", "Neisseria gonorrhoeae infection"]
+  },
+  "Leishmaniasis": {
+    "synonyms": ["Kala-azar", "Sandfly fever"]
+  },
+  "Filariasis": {
+    "synonyms": ["Elephantiasis", "Wuchereria bancrofti infection"]
+  },
+  "Ringworm": {
+    "synonyms": ["Tinea", "Dermatophytosis"]
+  },
+  "Candidiasis": {
+    "synonyms": ["Yeast infection", "Thrush"]
+  },
+  "Anthrax": {
+    "synonyms": ["Bacillus anthracis infection", "Wool-sorter's disease"]
+  },
+  "Plague": {
+    "synonyms": ["Yersinia pestis infection", "Black death", "Bubonic plague"]
+  },
+  "Smallpox": {
+    "synonyms": ["Variola", "Poxvirus infection"]
+  },
+  "Marburg virus disease": {
+    "synonyms": ["Marburg hemorrhagic fever", "MVD"]
+  },
+  "Hepatitis C": {
+    "synonyms": ["HCV infection", "Non-A, non-B hepatitis"]
+  },
+  "Hepatitis A": {
+    "synonyms": ["HAV infection", "Infectious hepatitis"]
+  },
+  "Hepatitis E": {
+    "synonyms": ["HEV infection", "Enteric hepatitis"]
+  },
+  "Meningitis": {
+    "synonyms": ["Brain fever", "Meningeal infection"]
+  },
+  "Encephalitis": {
+    "synonyms": ["Brain inflammation", "Viral encephalitis"]
+  },
+  "Japanese encephalitis": {
+    "synonyms": ["JE virus infection"]
+  },
+  "West Nile virus": {
+    "synonyms": ["WNV infection", "West Nile fever"]
+  },
+  "Lyme disease": {
+    "synonyms": ["Borrelia burgdorferi infection", "Tick-borne disease"]
+  },
+  "Chikungunya": {
+    "synonyms": ["CHIKV infection", "Viral arthritis fever"]
+  },
+  "Legionnaires' disease": {
+    "synonyms": ["Legionellosis", "Legionella infection"]
+  },
+  "Cystic fibrosis": {
+    "synonyms": ["CF", "Mucoviscidosis"]
+  },
+  "Sickle cell disease": {
+    "synonyms": ["Sickle cell anemia", "Hemoglobin S disease"]
+  },
+  "Hemophilia": {
+    "synonyms": ["Bleeding disorder", "Factor deficiency disorder"]
+  },
+  "Thalassemia": {
+    "synonyms": ["Mediterranean anemia", "Cooley's anemia"]
+  },
+  "Lupus": {
+    "synonyms": ["Systemic lupus erythematosus", "SLE"]
+  },
+  "Rheumatoid arthritis": {
+    "synonyms": ["RA", "Autoimmune arthritis"]
+  },
+  "Osteoarthritis": {
+    "synonyms": ["Degenerative joint disease", "Wear-and-tear arthritis"]
+  },
+  "Psoriasis": {
+    "synonyms": ["Psoriatic disease", "Chronic plaque psoriasis"]
+  },
+  "Eczema": {
+    "synonyms": ["Atopic dermatitis", "Skin inflammation"]
+  },
+  "Obesity": {
+    "synonyms": ["Overweight", "Adiposity"]
+  },
+  "Depression": {
+    "synonyms": ["Major depressive disorder", "MDD"]
+  },
+  "Anxiety disorder": {
+    "synonyms": ["Generalized anxiety disorder", "GAD"]
+  },
+  "Schizophrenia": {
+    "synonyms": ["Schizo disorder", "Psychotic disorder"]
+  },
+  "Bipolar disorder": {
+    "synonyms": ["Manic depression", "Bipolar affective disorder"]
+  },
+  "Autism spectrum disorder": {
+    "synonyms": ["ASD", "Autism"]
+  },
+  "Obsessive-compulsive disorder": {
+    "synonyms": ["OCD", "Compulsive neurosis"]
+  },
+  "Attention deficit hyperactivity disorder": {
+    "synonyms": ["ADHD", "Hyperkinetic disorder"]
+  },
+  "Chronic kidney disease": {
+    "synonyms": ["CKD", "Chronic renal failure"]
+  },
+  "Cirrhosis": {
+    "synonyms": ["Liver cirrhosis", "Hepatic cirrhosis"]
+  },
+  "Gastric ulcer": {
+    "synonyms": ["Stomach ulcer", "Peptic ulcer"]
+  },
+  "Pancreatitis": {
+    "synonyms": ["Inflammation of pancreas", "Acute pancreatitis"]
+  },
+  "Gallstones": {
+    "synonyms": ["Cholelithiasis", "Gallbladder stones"]
   }
 }
+
