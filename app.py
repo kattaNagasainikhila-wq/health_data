@@ -44,7 +44,7 @@ def get_symptoms(disease_name):
     return data.get(disease_name, [])
 
 def get_preventions(disease_name):
-    Get prevention list from prevention JSON.
+    """Get prevention list from prevention JSON."""
     data = fetch_json(PREVENTIONS_URL)
     return data.get(disease_name, [])
 
