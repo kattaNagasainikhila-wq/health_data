@@ -1,0 +1,62 @@
+{
+  "Malaria": {
+    "synonyms": ["Plasmodium infection", "Mosquito fever"]
+  },
+  "Tuberculosis": {
+    "synonyms": ["TB", "Consumption", "Phthisis"]
+  },
+  "Diabetes": {
+    "synonyms": ["Diabetes mellitus", "High blood sugar", "Sugar disease"]
+  },
+  "Hypertension": {
+    "synonyms": ["High blood pressure", "HBP"]
+  },
+  "Influenza": {
+    "synonyms": ["Flu", "Grippe"]
+  },
+  "COVID-19": {
+    "synonyms": ["Coronavirus", "SARS-CoV-2 infection", "Corona virus disease"]
+  },
+  "Dengue": {
+    "synonyms": ["Dengue fever", "Breakbone fever"]
+  },
+  "Cholera": {
+    "synonyms": ["Asiatic cholera", "Vibrio cholerae infection"]
+  },
+  "Hepatitis B": {
+    "synonyms": ["HBV infection", "Serum hepatitis"]
+  },
+  "Measles": {
+    "synonyms": ["Rubeola", "Red measles"]
+  },
+  "Chickenpox": {
+    "synonyms": ["Varicella", "Varicella-zoster virus infection"]
+  },
+  "Mumps": {
+    "synonyms": ["Epidemic parotitis"]
+  },
+  "Polio": {
+    "synonyms": ["Poliomyelitis", "Infantile paralysis"]
+  },
+  "Typhoid": {
+    "synonyms": ["Enteric fever", "Salmonella typhi infection"]
+  },
+  "Ebola": {
+    "synonyms": ["Ebola virus disease", "EVD"]
+  },
+  "Zika virus": {
+    "synonyms": ["Zika fever"]
+  },
+  "HIV/AIDS": {
+    "synonyms": ["Human immunodeficiency virus", "Acquired immunodeficiency syndrome"]
+  },
+  "Pneumonia": {
+    "synonyms": ["Lung infection", "Pulmonary infection"]
+  },
+  "Asthma": {
+    "synonyms": ["Reactive airway disease", "Bronchial asthma"]
+  },
+  "Common cold": {
+    "synonyms": ["Cold", "Upper respiratory infection", "URI"]
+  }
+}
