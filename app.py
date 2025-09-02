@@ -6,9 +6,9 @@ from bs4 import BeautifulSoup  # ✅ Added for WHO scraping
 app = Flask(__name__)
 
 # ---------- STATIC DATA URLs ----------
-SYNONYMS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/diseases_data.json"
-SYMPTOMS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/symptoms_data.json"
-PREVENTION_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/preventions_data.json"
+SYNONYMS_URL = "https://raw.githubusercontent.com/Hacker-Here/Static_Health_Database/main/disease_names.json"
+SYMPTOMS_URL = "https://raw.githubusercontent.com/Hacker-Here/Static_Health_Database/main/disease_symptoms.json"
+PREVENTION_URL = "https://raw.githubusercontent.com/Hacker-Here/Static_Health_Database/main/disease_preventions.json"
 
 # ---------- WHO OUTBREAKS PAGE ----------
 WHO_OUTBREAKS_URL = "https://www.who.int/emergencies/disease-outbreak-news"
