@@ -1,0 +1,438 @@
+{
+  "diseases": [
+    {
+      "name": "Malaria",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "hot body", "pyrexia"] },
+        { "name": "Chills", "synonyms": ["shivering", "rigors", "cold feeling"] },
+        { "name": "Sweating", "synonyms": ["excessive perspiration", "night sweats"] },
+        { "name": "Headache", "synonyms": ["head pain", "migraine"] },
+        { "name": "Muscle pain", "synonyms": ["body ache", "myalgia"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness", "low energy"] }
+      ]
+    },
+    {
+      "name": "Tuberculosis",
+      "symptoms": [
+        { "name": "Chronic cough", "synonyms": ["persistent cough", "long-term cough"] },
+        { "name": "Blood in sputum", "synonyms": ["coughing blood", "hemoptysis"] },
+        { "name": "Chest pain", "synonyms": ["thoracic pain", "tight chest"] },
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Night sweats", "synonyms": ["sweating at night", "sleep sweat"] },
+        { "name": "Weight loss", "synonyms": ["slim down", "unintentional loss of weight"] }
+      ]
+    },
+    {
+      "name": "COVID-19",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "hot body"] },
+        { "name": "Cough", "synonyms": ["dry cough", "continuous cough"] },
+        { "name": "Shortness of breath", "synonyms": ["difficulty breathing", "breathlessness"] },
+        { "name": "Loss of taste", "synonyms": ["ageusia", "taste loss"] },
+        { "name": "Loss of smell", "synonyms": ["anosmia", "smell loss"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "low energy"] }
+      ]
+    },
+    {
+      "name": "Influenza",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Cough", "synonyms": ["dry cough", "chesty cough"] },
+        { "name": "Body aches", "synonyms": ["muscle pain", "myalgia"] },
+        { "name": "Sore throat", "synonyms": ["throat pain", "pharyngitis"] },
+        { "name": "Headache", "synonyms": ["migraine", "head pain"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] }
+      ]
+    },
+    {
+      "name": "Dengue Fever",
+      "symptoms": [
+        { "name": "High fever", "synonyms": ["very high temperature", "severe fever"] },
+        { "name": "Severe headache", "synonyms": ["splitting headache", "intense head pain"] },
+        { "name": "Pain behind eyes", "synonyms": ["retro-orbital pain", "eye pain"] },
+        { "name": "Joint pain", "synonyms": ["arthralgia", "pain in joints"] },
+        { "name": "Muscle pain", "synonyms": ["body ache", "myalgia"] },
+        { "name": "Skin rash", "synonyms": ["red spots", "eruption on skin"] }
+      ]
+    },
+    {
+      "name": "Cholera",
+      "symptoms": [
+        { "name": "Severe diarrhea", "synonyms": ["watery stool", "loose motions"] },
+        { "name": "Dehydration", "synonyms": ["loss of fluids", "dry body"] },
+        { "name": "Vomiting", "synonyms": ["throwing up", "emesis"] },
+        { "name": "Thirst", "synonyms": ["dry mouth", "urge to drink water"] },
+        { "name": "Leg cramps", "synonyms": ["muscle spasms", "pain in legs"] }
+      ]
+    },
+    {
+      "name": "Typhoid Fever",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Abdominal pain", "synonyms": ["stomach pain", "belly ache"] },
+        { "name": "Headache", "synonyms": ["migraine", "head pain"] },
+        { "name": "Loss of appetite", "synonyms": ["no hunger", "anorexia"] },
+        { "name": "Constipation", "synonyms": ["difficulty passing stool", "hard stool"] }
+      ]
+    },
+    {
+      "name": "Asthma",
+      "symptoms": [
+        { "name": "Shortness of breath", "synonyms": ["breathlessness", "difficulty breathing"] },
+        { "name": "Chest tightness", "synonyms": ["pressure in chest", "constricted chest"] },
+        { "name": "Wheezing", "synonyms": ["whistling sound", "noisy breathing"] },
+        { "name": "Coughing", "synonyms": ["persistent cough", "dry cough"] }
+      ]
+    },
+    {
+      "name": "Pneumonia",
+      "symptoms": [
+        { "name": "Cough with phlegm", "synonyms": ["wet cough", "mucus cough"] },
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Chills", "synonyms": ["shivering", "cold feeling"] },
+        { "name": "Chest pain", "synonyms": ["thoracic pain", "tight chest"] },
+        { "name": "Shortness of breath", "synonyms": ["breathlessness", "difficulty breathing"] }
+      ]
+    },
+    {
+      "name": "Measles",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Cough", "synonyms": ["persistent cough", "dry cough"] },
+        { "name": "Runny nose", "synonyms": ["nasal discharge", "rhinitis"] },
+        { "name": "Red eyes", "synonyms": ["conjunctivitis", "eye redness"] },
+        { "name": "Skin rash", "synonyms": ["spots on skin", "eruption"] }
+      ]
+    },
+    {
+      "name": "Mumps",
+      "symptoms": [
+        { "name": "Swollen salivary glands", "synonyms": ["parotid swelling", "face swelling"] },
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Headache", "synonyms": ["migraine", "head pain"] },
+        { "name": "Muscle aches", "synonyms": ["body pain", "myalgia"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] }
+      ]
+    },
+    {
+      "name": "Rubella",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Skin rash", "synonyms": ["red spots", "eruption on skin"] },
+        { "name": "Headache", "synonyms": ["head pain", "migraine"] },
+        { "name": "Runny nose", "synonyms": ["nasal discharge", "rhinitis"] },
+        { "name": "Swollen lymph nodes", "synonyms": ["gland swelling", "lymphadenopathy"] }
+      ]
+    },
+    {
+      "name": "Chickenpox",
+      "symptoms": [
+        { "name": "Itchy rash", "synonyms": ["skin irritation", "eruption"] },
+        { "name": "Blisters", "synonyms": ["fluid-filled bumps", "vesicles"] },
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Tiredness", "synonyms": ["fatigue", "low energy"] },
+        { "name": "Loss of appetite", "synonyms": ["no hunger", "anorexia"] }
+      ]
+    },
+    {
+      "name": "Hepatitis A",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] },
+        { "name": "Loss of appetite", "synonyms": ["no hunger", "anorexia"] },
+        { "name": "Nausea", "synonyms": ["vomiting feeling", "queasiness"] },
+        { "name": "Abdominal pain", "synonyms": ["stomach pain", "belly ache"] },
+        { "name": "Jaundice", "synonyms": ["yellow skin", "yellow eyes"] }
+      ]
+    },
+    {
+      "name": "Hepatitis B",
+      "symptoms": [
+        { "name": "Abdominal pain", "synonyms": ["stomach pain", "belly ache"] },
+        { "name": "Dark urine", "synonyms": ["brown urine", "tea-colored urine"] },
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Joint pain", "synonyms": ["arthralgia", "pain in joints"] },
+        { "name": "Jaundice", "synonyms": ["yellow skin", "yellow eyes"] }
+      ]
+    },
+    {
+      "name": "Hepatitis C",
+      "symptoms": [
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] },
+        { "name": "Nausea", "synonyms": ["vomiting feeling", "queasiness"] },
+        { "name": "Loss of appetite", "synonyms": ["no hunger", "anorexia"] },
+        { "name": "Jaundice", "synonyms": ["yellow skin", "yellow eyes"] },
+        { "name": "Joint pain", "synonyms": ["arthralgia", "pain in joints"] }
+      ]
+    },
+    {
+      "name": "Ebola Virus Disease",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Severe headache", "synonyms": ["splitting headache", "intense head pain"] },
+        { "name": "Muscle pain", "synonyms": ["body ache", "myalgia"] },
+        { "name": "Weakness", "synonyms": ["fatigue", "tiredness"] },
+        { "name": "Vomiting", "synonyms": ["throwing up", "emesis"] },
+        { "name": "Bleeding", "synonyms": ["hemorrhage", "blood loss"] }
+      ]
+    },
+    {
+      "name": "Zika Virus",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Rash", "synonyms": ["skin spots", "eruption"] },
+        { "name": "Joint pain", "synonyms": ["arthralgia", "pain in joints"] },
+        { "name": "Conjunctivitis", "synonyms": ["red eyes", "eye irritation"] },
+        { "name": "Muscle pain", "synonyms": ["body ache", "myalgia"] },
+        { "name": "Headache", "synonyms": ["migraine", "head pain"] }
+      ]
+    },
+    {
+      "name": "Yellow Fever",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Headache", "synonyms": ["migraine", "head pain"] },
+        { "name": "Jaundice", "synonyms": ["yellow skin", "yellow eyes"] },
+        { "name": "Muscle pain", "synonyms": ["body ache", "myalgia"] },
+        { "name": "Nausea", "synonyms": ["vomiting feeling", "queasiness"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] }
+      ]
+    },
+    {
+      "name": "Polio",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Sore throat", "synonyms": ["throat pain", "pharyngitis"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] },
+        { "name": "Paralysis", "synonyms": ["loss of movement", "immobility"] },
+        { "name": "Headache", "synonyms": ["migraine", "head pain"] },
+        { "name": "Stiffness", "synonyms": ["rigidity", "muscle stiffness"] }
+      ]
+    },
+    {
+      "name": "Leprosy",
+      "symptoms": [
+        { "name": "Skin lesions", "synonyms": ["spots on skin", "skin sores"] },
+        { "name": "Numbness", "synonyms": ["loss of sensation", "tingling"] },
+        { "name": "Muscle weakness", "synonyms": ["low strength", "reduced muscle power"] },
+        { "name": "Eye problems", "synonyms": ["vision issues", "ocular problems"] },
+        { "name": "Swollen nerves", "synonyms": ["nerve swelling", "enlarged nerves"] }
+      ]
+    },
+    {
+      "name": "Rabies",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Headache", "synonyms": ["migraine", "head pain"] },
+        { "name": "Anxiety", "synonyms": ["nervousness", "unease"] },
+        { "name": "Confusion", "synonyms": ["disorientation", "mental fog"] },
+        { "name": "Excessive salivation", "synonyms": ["drooling", "foaming at mouth"] }
+      ]
+    },
+    {
+      "name": "Plague",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Chills", "synonyms": ["shivering", "rigors"] },
+        { "name": "Weakness", "synonyms": ["fatigue", "tiredness"] },
+        { "name": "Swollen lymph nodes", "synonyms": ["gland swelling", "buboes"] },
+        { "name": "Headache", "synonyms": ["migraine", "head pain"] }
+      ]
+    },
+    {
+      "name": "Lyme Disease",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Headache", "synonyms": ["migraine", "head pain"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] },
+        { "name": "Joint pain", "synonyms": ["arthralgia", "pain in joints"] },
+        { "name": "Skin rash", "synonyms": ["red spots", "erythema"] }
+      ]
+    },
+    {
+      "name": "Chikungunya",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Joint pain", "synonyms": ["arthralgia", "pain in joints"] },
+        { "name": "Headache", "synonyms": ["migraine", "head pain"] },
+        { "name": "Muscle pain", "synonyms": ["body ache", "myalgia"] },
+        { "name": "Rash", "synonyms": ["skin spots", "eruption"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] }
+      ]
+    },
+    {
+      "name": "West Nile Virus",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Headache", "synonyms": ["migraine", "head pain"] },
+        { "name": "Body aches", "synonyms": ["muscle pain", "myalgia"] },
+        { "name": "Skin rash", "synonyms": ["red spots", "eruption"] },
+        { "name": "Swollen lymph nodes", "synonyms": ["gland swelling", "lymphadenopathy"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] }
+      ]
+    },
+    {
+      "name": "Smallpox",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] },
+        { "name": "Headache", "synonyms": ["migraine", "head pain"] },
+        { "name": "Backache", "synonyms": ["spinal pain", "dorsal pain"] },
+        { "name": "Rash", "synonyms": ["spots on skin", "eruption"] },
+        { "name": "Blisters", "synonyms": ["vesicles", "fluid-filled bumps"] }
+      ]
+    },
+    {
+      "name": "Anthrax",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Chest pain", "synonyms": ["thoracic pain", "tight chest"] },
+        { "name": "Cough", "synonyms": ["persistent cough", "dry cough"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] },
+        { "name": "Skin lesions", "synonyms": ["blisters", "sores"] }
+      ]
+    },
+    {
+      "name": "H1N1 Influenza",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Cough", "synonyms": ["dry cough", "chesty cough"] },
+        { "name": "Sore throat", "synonyms": ["throat pain", "pharyngitis"] },
+        { "name": "Runny nose", "synonyms": ["nasal discharge", "rhinitis"] },
+        { "name": "Body aches", "synonyms": ["muscle pain", "myalgia"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] }
+      ]
+    },
+    {
+      "name": "Scarlet Fever",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Red rash", "synonyms": ["spots on skin", "eruption"] },
+        { "name": "Sore throat", "synonyms": ["throat pain", "pharyngitis"] },
+        { "name": "Strawberry tongue", "synonyms": ["red tongue", "inflamed tongue"] },
+        { "name": "Headache", "synonyms": ["migraine", "head pain"] }
+      ]
+    },
+    {
+      "name": "Meningitis",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Severe headache", "synonyms": ["splitting headache", "intense head pain"] },
+        { "name": "Stiff neck", "synonyms": ["neck rigidity", "neck stiffness"] },
+        { "name": "Nausea", "synonyms": ["vomiting feeling", "queasiness"] },
+        { "name": "Sensitivity to light", "synonyms": ["photophobia", "light discomfort"] }
+      ]
+    },
+    {
+      "name": "Tetanus",
+      "symptoms": [
+        { "name": "Muscle stiffness", "synonyms": ["rigidity", "tight muscles"] },
+        { "name": "Jaw cramping", "synonyms": ["lockjaw", "trismus"] },
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Sweating", "synonyms": ["perspiration", "excessive sweating"] },
+        { "name": "Rapid heartbeat", "synonyms": ["tachycardia", "fast pulse"] }
+      ]
+    },
+    {
+      "name": "Poliomyelitis",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] },
+        { "name": "Paralysis", "synonyms": ["loss of movement", "immobility"] },
+        { "name": "Stiffness", "synonyms": ["muscle rigidity", "rigidity"] },
+        { "name": "Headache", "synonyms": ["migraine", "head pain"] }
+      ]
+    },
+    {
+      "name": "Whooping Cough",
+      "symptoms": [
+        { "name": "Severe cough", "synonyms": ["persistent cough", "paroxysmal cough"] },
+        { "name": "Whooping sound", "synonyms": ["gasping cough", "inspiratory whoop"] },
+        { "name": "Runny nose", "synonyms": ["nasal discharge", "rhinitis"] },
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Vomiting", "synonyms": ["throwing up", "emesis"] }
+      ]
+    },
+    {
+      "name": "Rotavirus Infection",
+      "symptoms": [
+        { "name": "Diarrhea", "synonyms": ["loose motions", "watery stool"] },
+        { "name": "Vomiting", "synonyms": ["throwing up", "emesis"] },
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Abdominal pain", "synonyms": ["stomach ache", "belly pain"] },
+        { "name": "Dehydration", "synonyms": ["loss of fluids", "dry body"] }
+      ]
+    },
+    {
+      "name": "Norovirus Infection",
+      "symptoms": [
+        { "name": "Nausea", "synonyms": ["vomiting feeling", "queasiness"] },
+        { "name": "Vomiting", "synonyms": ["throwing up", "emesis"] },
+        { "name": "Diarrhea", "synonyms": ["loose motions", "watery stool"] },
+        { "name": "Stomach cramps", "synonyms": ["abdominal pain", "belly ache"] },
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] }
+      ]
+    },
+    {
+      "name": "Giardiasis",
+      "symptoms": [
+        { "name": "Diarrhea", "synonyms": ["loose motions", "watery stool"] },
+        { "name": "Abdominal cramps", "synonyms": ["stomach pain", "belly ache"] },
+        { "name": "Nausea", "synonyms": ["vomiting feeling", "queasiness"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] },
+        { "name": "Bloating", "synonyms": ["abdominal swelling", "gas"] }
+      ]
+    },
+    {
+      "name": "Hookworm Infection",
+      "symptoms": [
+        { "name": "Abdominal pain", "synonyms": ["stomach ache", "belly pain"] },
+        { "name": "Diarrhea", "synonyms": ["loose motions", "watery stool"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] },
+        { "name": "Anemia", "synonyms": ["low hemoglobin", "blood deficiency"] },
+        { "name": "Itchy rash", "synonyms": ["skin irritation", "eruption"] }
+      ]
+    },
+    {
+      "name": "Ascariasis",
+      "symptoms": [
+        { "name": "Abdominal pain", "synonyms": ["stomach ache", "belly pain"] },
+        { "name": "Diarrhea", "synonyms": ["loose motions", "watery stool"] },
+        { "name": "Nausea", "synonyms": ["vomiting feeling", "queasiness"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] },
+        { "name": "Weight loss", "synonyms": ["slim down", "unintentional loss of weight"] }
+      ]
+    },
+    {
+      "name": "Trichuriasis",
+      "symptoms": [
+        { "name": "Abdominal pain", "synonyms": ["stomach ache", "belly pain"] },
+        { "name": "Diarrhea", "synonyms": ["loose motions", "watery stool"] },
+        { "name": "Anemia", "synonyms": ["low hemoglobin", "blood deficiency"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] },
+        { "name": "Weight loss", "synonyms": ["slim down", "unintentional loss of weight"] }
+      ]
+    },
+    {
+      "name": "Schistosomiasis",
+      "symptoms": [
+        { "name": "Abdominal pain", "synonyms": ["stomach ache", "belly pain"] },
+        { "name": "Diarrhea", "synonyms": ["loose motions", "watery stool"] },
+        { "name": "Blood in urine", "synonyms": ["hematuria", "urinary bleeding"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] },
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] }
+      ]
+    },
+    {
+      "name": "Toxoplasmosis",
+      "symptoms": [
+        { "name": "Fever", "synonyms": ["high temperature", "pyrexia"] },
+        { "name": "Fatigue", "synonyms": ["tiredness", "weakness"] },
+        { "name": "Muscle aches", "synonyms": ["body pain", "myalgia"] },
+        { "name": "Headache", "synonyms": ["migraine", "head pain"] },
+        { "name": "Swollen lymph nodes", "synonyms": ["gland swelling", "lymphadenopathy"] }
+      ]
+    }
+  ]
+}
+
