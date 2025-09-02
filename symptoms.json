@@ -1,0 +1,22 @@
+{
+  "Malaria": ["Fever", "Chills", "Sweating", "Headache", "Nausea", "Fatigue"],
+  "Tuberculosis": ["Persistent cough", "Weight loss", "Fever", "Night sweats", "Fatigue", "Loss of appetite"],
+  "Diabetes": ["Frequent urination", "Increased thirst", "Increased hunger", "Fatigue", "Blurred vision", "Slow-healing sores"],
+  "Hypertension": ["Headache", "Dizziness", "Blurred vision", "Shortness of breath", "Nosebleeds", "Chest pain"],
+  "Influenza": ["Fever", "Chills", "Cough", "Sore throat", "Runny or stuffy nose", "Muscle aches"],
+  "COVID-19": ["Fever", "Cough", "Shortness of breath", "Fatigue", "Loss of taste or smell", "Sore throat"],
+  "Dengue": ["High fever", "Severe headache", "Pain behind the eyes", "Joint and muscle pain", "Rash", "Nausea"],
+  "Cholera": ["Diarrhea", "Dehydration", "Vomiting", "Rapid heart rate", "Muscle cramps", "Low blood pressure"],
+  "Hepatitis B": ["Jaundice", "Fatigue", "Abdominal pain", "Loss of appetite", "Nausea", "Dark urine"],
+  "Measles": ["Fever", "Cough", "Runny nose", "Red eyes", "Rash", "Koplik spots"],
+  "Chickenpox": ["Itchy rash", "Fever", "Fatigue", "Loss of appetite", "Headache", "Blisters"],
+  "Mumps": ["Swollen salivary glands", "Fever", "Headache", "Muscle aches", "Loss of appetite", "Fatigue"],
+  "Polio": ["Fever", "Fatigue", "Headache", "Muscle pain", "Stiff neck", "Paralysis in severe cases"],
+  "Typhoid": ["High fever", "Weakness", "Stomach pain", "Headache", "Loss of appetite", "Rash"],
+  "Ebola": ["Fever", "Severe headache", "Muscle pain", "Weakness", "Diarrhea", "Vomiting", "Bleeding"],
+  "Zika virus": ["Fever", "Rash", "Joint pain", "Conjunctivitis", "Muscle pain", "Headache"],
+  "HIV/AIDS": ["Fever", "Fatigue", "Swollen lymph nodes", "Weight loss", "Diarrhea", "Night sweats"],
+  "Pneumonia": ["Cough", "Fever", "Chills", "Shortness of breath", "Chest pain", "Fatigue"],
+  "Asthma": ["Shortness of breath", "Chest tightness", "Wheezing", "Coughing", "Difficulty sleeping due to symptoms"],
+  "Common cold": ["Runny or stuffy nose", "Sneezing", "Sore throat", "Cough", "Mild headache", "Fatigue"]
+}
