@@ -4,7 +4,7 @@ import requests
 app = Flask(__name__)
 
 # Raw GitHub URLs of your files
-DISEASES_URL = 
+DISEASES_URL = "https://github.com/kattaNagasainikhila-wq/health_data/blob/main/diseases_data.json"
 SYMPTOMS_URL = 
 PREVENTIONS_URL = 
 # Function to load JSON from GitHub
