@@ -1,0 +1,367 @@
+{
+  "Malaria": [
+    "Use mosquito nets",
+    "Apply insect repellents",
+    "Avoid stagnant water"
+  ],
+  "Tuberculosis": [
+    "Cover mouth while coughing",
+    "Ensure proper ventilation",
+    "Complete preventive medication if exposed"
+  ],
+  "Diabetes": [
+    "Maintain a healthy diet",
+    "Exercise regularly",
+    "Monitor blood sugar levels"
+  ],
+  "Hypertension": [
+    "Reduce salt intake",
+    "Maintain healthy weight",
+    "Exercise regularly"
+  ],
+  "Influenza": [
+    "Get annual flu vaccine",
+    "Practice good hand hygiene",
+    "Avoid close contact with infected people"
+  ],
+  "COVID-19": [
+    "Wear a mask in crowded areas",
+    "Maintain hand hygiene",
+    "Get vaccinated"
+  ],
+  "Dengue": [
+    "Eliminate mosquito breeding sites",
+    "Use mosquito repellents",
+    "Sleep under nets"
+  ],
+  "Cholera": [
+    "Drink safe water",
+    "Practice proper sanitation",
+    "Cook food thoroughly"
+  ],
+  "Hepatitis B": [
+    "Get vaccinated",
+    "Avoid sharing needles",
+    "Practice safe sex"
+  ],
+  "Measles": [
+    "Get vaccinated (MMR)",
+    "Maintain good nutrition",
+    "Avoid contact with infected individuals"
+  ],
+  "Chickenpox": [
+    "Get vaccinated",
+    "Avoid contact with infected people",
+    "Maintain hygiene"
+  ],
+  "Mumps": [
+    "Get vaccinated (MMR)",
+    "Practice good hand hygiene",
+    "Avoid close contact with infected individuals"
+  ],
+  "Polio": [
+    "Get polio vaccine",
+    "Maintain sanitation",
+    "Ensure clean drinking water"
+  ],
+  "Typhoid": [
+    "Drink boiled or filtered water",
+    "Wash hands before meals",
+    "Avoid street food"
+  ],
+  "Ebola": [
+    "Avoid contact with infected individuals",
+    "Wear protective gear",
+    "Practice safe burial methods"
+  ],
+  "Zika virus": [
+    "Avoid mosquito bites",
+    "Use repellents and nets",
+    "Prevent mosquito breeding"
+  ],
+  "HIV/AIDS": [
+    "Practice safe sex",
+    "Avoid sharing needles",
+    "Get tested regularly"
+  ],
+  "Pneumonia": [
+    "Get vaccinated",
+    "Wash hands regularly",
+    "Avoid smoking"
+  ],
+  "Asthma": [
+    "Avoid allergens and triggers",
+    "Use prescribed inhalers",
+    "Maintain good air quality"
+  ],
+  "Common cold": [
+    "Wash hands frequently",
+    "Avoid close contact with sick people",
+    "Maintain good immunity"
+  ],
+  "Alzheimer's disease": [
+    "Stay mentally active",
+    "Maintain healthy lifestyle",
+    "Control blood pressure and cholesterol"
+  ],
+  "Parkinson's disease": [
+    "Regular physical activity",
+    "Balanced diet",
+    "Avoid exposure to toxins"
+  ],
+  "Stroke": [
+    "Control blood pressure",
+    "Exercise regularly",
+    "Avoid smoking"
+  ],
+  "Epilepsy": [
+    "Take prescribed medication",
+    "Avoid sleep deprivation",
+    "Limit alcohol"
+  ],
+  "Migraine": [
+    "Avoid known triggers",
+    "Manage stress",
+    "Maintain regular sleep"
+  ],
+  "Leprosy": [
+    "Early diagnosis and treatment",
+    "Avoid close contact with untreated patients",
+    "Maintain hygiene"
+  ],
+  "Rabies": [
+    "Vaccinate pets",
+    "Avoid contact with stray animals",
+    "Get post-exposure prophylaxis after bites"
+  ],
+  "Tetanus": [
+    "Get vaccinated",
+    "Clean wounds properly",
+    "Seek prompt medical care for injuries"
+  ],
+  "Yellow fever": [
+    "Get vaccinated",
+    "Use mosquito repellents",
+    "Avoid mosquito bites"
+  ],
+  "Scarlet fever": [
+    "Maintain hygiene",
+    "Avoid sharing utensils",
+    "Seek early treatment"
+  ],
+  "Whooping cough": [
+    "Get vaccinated (DTaP)",
+    "Cover mouth while coughing",
+    "Maintain hygiene"
+  ],
+  "Syphilis": [
+    "Practice safe sex",
+    "Get tested regularly",
+    "Avoid sharing needles"
+  ],
+  "Gonorrhea": [
+    "Practice safe sex",
+    "Regular screening",
+    "Avoid multiple partners"
+  ],
+  "Leishmaniasis": [
+    "Avoid sandfly bites",
+    "Use insect repellents",
+    "Sleep under nets"
+  ],
+  "Filariasis": [
+    "Avoid mosquito bites",
+    "Use repellents and nets",
+    "Prevent mosquito breeding"
+  ],
+  "Ringworm": [
+    "Maintain skin hygiene",
+    "Avoid sharing personal items",
+    "Keep skin dry"
+  ],
+  "Candidiasis": [
+    "Maintain good oral and personal hygiene",
+    "Avoid unnecessary antibiotics",
+    "Control blood sugar levels"
+  ],
+  "Anthrax": [
+    "Avoid contact with infected animals",
+    "Vaccinate livestock",
+    "Use protective clothing"
+  ],
+  "Plague": [
+    "Control rodent population",
+    "Avoid flea bites",
+    "Practice hygiene"
+  ],
+  "Smallpox": [
+    "Vaccination (eradicated but lab precaution)",
+    "Strict isolation in case of outbreaks",
+    "Good hygiene"
+  ],
+  "Marburg virus disease": [
+    "Avoid contact with bats and infected people",
+    "Use protective gear",
+    "Practice safe burial methods"
+  ],
+  "Hepatitis C": [
+    "Avoid sharing needles",
+    "Practice safe sex",
+    "Screen blood donations"
+  ],
+  "Hepatitis A": [
+    "Get vaccinated",
+    "Drink clean water",
+    "Maintain hygiene"
+  ],
+  "Hepatitis E": [
+    "Drink safe water",
+    "Maintain sanitation",
+    "Avoid undercooked meat"
+  ],
+  "Meningitis": [
+    "Get vaccinated",
+    "Avoid close contact with infected people",
+    "Maintain hygiene"
+  ],
+  "Encephalitis": [
+    "Avoid mosquito bites",
+    "Get vaccinated if available",
+    "Maintain hygiene"
+  ],
+  "Japanese encephalitis": [
+    "Get vaccinated",
+    "Avoid mosquito bites",
+    "Use nets and repellents"
+  ],
+  "West Nile virus": [
+    "Avoid mosquito bites",
+    "Eliminate standing water",
+    "Use protective clothing"
+  ],
+  "Lyme disease": [
+    "Avoid tick bites",
+    "Wear protective clothing",
+    "Check body after outdoor activities"
+  ],
+  "Chikungunya": [
+    "Avoid mosquito bites",
+    "Use repellents",
+    "Prevent mosquito breeding"
+  ],
+  "Legionnaires' disease": [
+    "Maintain clean water systems",
+    "Avoid contaminated water sources",
+    "Regular disinfection of cooling towers"
+  ],
+  "Cystic fibrosis": [
+    "Regular physiotherapy",
+    "Avoid lung infections",
+    "Maintain nutrition"
+  ],
+  "Sickle cell disease": [
+    "Stay hydrated",
+    "Avoid extreme temperatures",
+    "Take prescribed medication"
+  ],
+  "Hemophilia": [
+    "Avoid injuries",
+    "Get clotting factor treatment",
+    "Regular checkups"
+  ],
+  "Thalassemia": [
+    "Regular blood transfusions if prescribed",
+    "Genetic counseling",
+    "Maintain healthy lifestyle"
+  ],
+  "Lupus": [
+    "Avoid sun exposure",
+    "Take prescribed medication",
+    "Manage stress"
+  ],
+  "Rheumatoid arthritis": [
+    "Exercise regularly",
+    "Maintain healthy weight",
+    "Avoid smoking"
+  ],
+  "Osteoarthritis": [
+    "Maintain healthy weight",
+    "Exercise regularly",
+    "Avoid joint injuries"
+  ],
+  "Psoriasis": [
+    "Moisturize skin",
+    "Avoid triggers like stress",
+    "Follow prescribed treatment"
+  ],
+  "Eczema": [
+    "Keep skin moisturized",
+    "Avoid allergens",
+    "Use mild soaps"
+  ],
+  "Obesity": [
+    "Maintain balanced diet",
+    "Exercise regularly",
+    "Limit processed foods"
+  ],
+  "Depression": [
+    "Seek counseling",
+    "Exercise regularly",
+    "Maintain social connections"
+  ],
+  "Anxiety disorder": [
+    "Practice relaxation techniques",
+    "Seek therapy",
+    "Avoid caffeine and alcohol"
+  ],
+  "Schizophrenia": [
+    "Adhere to prescribed medication",
+    "Seek therapy",
+    "Avoid drug abuse"
+  ],
+  "Bipolar disorder": [
+    "Follow prescribed treatment",
+    "Maintain regular sleep",
+    "Avoid substance abuse"
+  ],
+  "Autism spectrum disorder": [
+    "Early intervention therapies",
+    "Behavioral therapy",
+    "Supportive learning environment"
+  ],
+  "Obsessive-compulsive disorder": [
+    "Seek therapy",
+    "Practice stress management",
+    "Follow prescribed medication"
+  ],
+  "Attention deficit hyperactivity disorder": [
+    "Follow behavioral therapy",
+    "Maintain structured routines",
+    "Use prescribed medication"
+  ],
+  "Chronic kidney disease": [
+    "Control blood pressure",
+    "Limit salt intake",
+    "Avoid NSAIDs"
+  ],
+  "Cirrhosis": [
+    "Avoid alcohol",
+    "Get vaccinated for hepatitis",
+    "Maintain healthy diet"
+  ],
+  "Gastric ulcer": [
+    "Avoid NSAIDs",
+    "Limit spicy foods",
+    "Manage stress"
+  ],
+  "Pancreatitis": [
+    "Avoid alcohol",
+    "Maintain healthy diet",
+    "Treat gallstones if present"
+  ],
+  "Gallstones": [
+    "Maintain healthy weight",
+    "Eat balanced diet",
+    "Exercise regularly"
+  ]
+}
