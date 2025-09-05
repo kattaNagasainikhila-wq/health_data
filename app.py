@@ -1,6 +1,7 @@
+import os
 import json
 import requests
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 
 app = Flask(__name__)
 
@@ -8,6 +9,7 @@ app = Flask(__name__)
 DISEASES_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/diseases.json"
 SYMPTOMS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/symptoms.json"
 PREVENTIONS_URL ="https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/preventions.json"
+
 # Cache for GitHub JSON to avoid fetching every time
 data_cache = {}
 
@@ -47,45 +49,76 @@ def get_preventions(disease_name):
     data = fetch_json(PREVENTIONS_URL)
     return data.get(disease_name, [])
 
-# ================== WEBHOOK ==================
+def process_disease_query(user_input):
+    """Process disease query and return response text."""
+    diseases_data = fetch_json(DISEASES_URL)
+    disease_key = find_disease_key(user_input, diseases_data)
+    if disease_key:
+        symptoms = get_symptoms(disease_key)
+        preventions = get_preventions(disease_key)
+
+        response = f"Here’s what I found about {disease_key}:"
+        if symptoms:
+            response += f"\n🤒 Symptoms: {', '.join(symptoms)}."
+        else:
+            response += f"\n(No symptoms data available.)"
+
+        if preventions:
+            response += f"\n🛡 Prevention: {', '.join(preventions)}"
+        else:
+            response += f"\n(No prevention info available.)"
+        return response
+    else:
+        return f"Sorry, I do not have information about '{user_input}'."
+
+# ================== DIALOGFLOW WEBHOOK ==================
 @app.route("/webhook", methods=["POST"])
 def webhook():
+    """Dialogflow webhook for fulfillment."""
     try:
         req = request.get_json(force=True)
         intent = req.get("queryResult", {}).get("intent", {}).get("displayName", "")
         params = req.get("queryResult", {}).get("parameters", {})
 
-        disease_input = None
-        if params.get("diseases"):
-            disease_input = params["diseases"]
-
+        disease_input = params.get("diseases")
         response_text = "Sorry, I could not find information for that disease."
 
         if disease_input:
-            # Load diseases JSON
-            diseases_data = fetch_json(DISEASES_URL)
-            disease_key = find_disease_key(disease_input, diseases_data)
-            if disease_key:
-                if intent in ["ask_symptoms", "disease_info"]:
-                    symptoms = get_symptoms(disease_key)
-                    if symptoms:
-                        response_text = f"🤒 Symptoms of {disease_key}: {', '.join(symptoms)}."
-                    else:
-                        response_text = f"Sorry, symptoms for {disease_key} are not available."
-                if intent in ["ask_preventions", "disease_info"]:
-                    preventions = get_preventions(disease_key)
-                    if preventions:
-                        response_text += f"\n🛡 Prevention measures: {', '.join(preventions)}"
-                    else:
-                        response_text += f"\nPrevention info for {disease_key} is not available."
-            else:
-                response_text = f"Sorry, I do not have information about '{disease_input}'."
+            response_text = process_disease_query(disease_input)
 
         return jsonify({"fulfillmentText": response_text})
 
     except Exception as e:
         print("Webhook Error:", e)
         return jsonify({"fulfillmentText": "Sorry, something went wrong on the server."})
+
+# ================== TWILIO WEBHOOK ==================
+@app.route("/twilio-webhook", methods=["POST"])
+def twilio_webhook():
+    """Webhook for WhatsApp via Twilio."""
+    try:
+        incoming_msg = request.form.get("Body", "").strip()
+        from_number = request.form.get("From", "")
+
+        if not incoming_msg:
+            reply = "Please enter a disease name to get info."
+        else:
+            reply = process_disease_query(incoming_msg)
+
+        # TwiML response to Twilio
+        twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Message>{reply}</Message>
+</Response>"""
+
+        return Response(twiml, mimetype="text/xml")
+
+    except Exception as e:
+        print("Twilio Webhook Error:", e)
+        return Response(
+            """<?xml version="1.0" encoding="UTF-8"?><Response><Message>Sorry, something went wrong.</Message></Response>""",
+            mimetype="text/xml"
+        )
 
 # ================== MAIN ==================
 if __name__ == "__main__":
