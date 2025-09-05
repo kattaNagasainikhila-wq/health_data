@@ -1,14 +1,26 @@
 import os
 import json
 import requests
-from flask import Flask, request, jsonify, Response
+from flask import Flask, request, Response, jsonify
+from google.cloud import dialogflow_v2 as dialogflow
 
 app = Flask(__name__)
+
+# ---------- ENV VARS ----------
+PROJECT_ID = os.environ.get("DIALOGFLOW_PROJECT_ID")
+
+# --- Save service account JSON to temp file ---
+sa_json = os.environ.get("DIALOGFLOW_SA_JSON")
+if sa_json:
+    sa_path = "/tmp/dialogflow_sa.json"
+    with open(sa_path, "w") as f:
+        f.write(sa_json)
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = sa_path
 
 # ---------- GITHUB RAW FILES ----------
 DISEASES_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/diseases.json"
 SYMPTOMS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/symptoms.json"
-PREVENTIONS_URL ="https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/preventions.json"
+PREVENTIONS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/preventions.json"
 
 # Cache for GitHub JSON to avoid fetching every time
 data_cache = {}
@@ -49,32 +61,24 @@ def get_preventions(disease_name):
     data = fetch_json(PREVENTIONS_URL)
     return data.get(disease_name, [])
 
-def process_disease_query(user_input):
-    """Process disease query and return response text."""
-    diseases_data = fetch_json(DISEASES_URL)
-    disease_key = find_disease_key(user_input, diseases_data)
-    if disease_key:
-        symptoms = get_symptoms(disease_key)
-        preventions = get_preventions(disease_key)
+# ================== DIALOGFLOW HELPER ==================
+def detect_intent_text(project_id, session_id, text, language_code="en"):
+    """Send text to Dialogflow and return fulfillment text."""
+    session_client = dialogflow.SessionsClient()
+    session = session_client.session_path(project_id, session_id)
 
-        response = f"Here’s what I found about {disease_key}:"
-        if symptoms:
-            response += f"\n🤒 Symptoms: {', '.join(symptoms)}."
-        else:
-            response += f"\n(No symptoms data available.)"
+    text_input = dialogflow.TextInput(text=text, language_code=language_code)
+    query_input = dialogflow.QueryInput(text=text_input)
 
-        if preventions:
-            response += f"\n🛡 Prevention: {', '.join(preventions)}"
-        else:
-            response += f"\n(No prevention info available.)"
-        return response
-    else:
-        return f"Sorry, I do not have information about '{user_input}'."
+    response = session_client.detect_intent(
+        request={"session": session, "query_input": query_input}
+    )
+    return response.query_result.fulfillment_text
 
-# ================== DIALOGFLOW WEBHOOK ==================
-@app.route("/webhook", methods=["POST"])
-def webhook():
-    """Dialogflow webhook for fulfillment."""
+# ================== DIALOGFLOW FULFILLMENT ==================
+@app.route("/dialogflow-webhook", methods=["POST"])
+def dialogflow_webhook():
+    """Webhook called by Dialogflow to fetch symptoms/preventions."""
     try:
         req = request.get_json(force=True)
         intent = req.get("queryResult", {}).get("intent", {}).get("displayName", "")
@@ -84,28 +88,43 @@ def webhook():
         response_text = "Sorry, I could not find information for that disease."
 
         if disease_input:
-            response_text = process_disease_query(disease_input)
+            diseases_data = fetch_json(DISEASES_URL)
+            disease_key = find_disease_key(disease_input, diseases_data)
+
+            if disease_key:
+                parts = []
+                if intent in ["ask_symptoms", "disease_info"]:
+                    symptoms = get_symptoms(disease_key)
+                    if symptoms:
+                        parts.append(f"🤒 Symptoms of {disease_key}: {', '.join(symptoms)}.")
+                if intent in ["ask_preventions", "disease_info"]:
+                    preventions = get_preventions(disease_key)
+                    if preventions:
+                        parts.append(f"🛡 Prevention: {', '.join(preventions)}")
+
+                if parts:
+                    response_text = "\n".join(parts)
 
         return jsonify({"fulfillmentText": response_text})
 
     except Exception as e:
-        print("Webhook Error:", e)
-        return jsonify({"fulfillmentText": "Sorry, something went wrong on the server."})
+        print("Dialogflow Webhook Error:", e)
+        return jsonify({"fulfillmentText": "Sorry, something went wrong."})
 
 # ================== TWILIO WEBHOOK ==================
 @app.route("/twilio-webhook", methods=["POST"])
 def twilio_webhook():
-    """Webhook for WhatsApp via Twilio."""
+    """Entry point for WhatsApp via Twilio."""
     try:
         incoming_msg = request.form.get("Body", "").strip()
-        from_number = request.form.get("From", "")
+        from_number = request.form.get("From", "user")
 
         if not incoming_msg:
-            reply = "Please enter a disease name to get info."
+            reply = "Please type something so I can help you."
         else:
-            reply = process_disease_query(incoming_msg)
+            reply = detect_intent_text(PROJECT_ID, from_number, incoming_msg)
 
-        # TwiML response to Twilio
+        # TwiML reply
         twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
     <Message>{reply}</Message>
