@@ -32,52 +32,57 @@ def clean_input(text):
 
 # ================== PROCESSORS ==================
 def process_symptom_query(symptoms_list):
+    """Return possible diseases based on symptoms, always returns text."""
     symptoms_data = fetch_json(SYMPTOMS_URL)
+    preventions_data = fetch_json(PREVENTIONS_URL)
+
     if not symptoms_list:
-        return None
+        return "Sorry, I couldn't detect any symptoms. Please provide your symptoms clearly."
 
     symptoms_given = [s.lower().strip() for s in symptoms_list]
-
     matched_diseases = {}
+
     for disease, disease_symptoms in symptoms_data.items():
         normalized_symptoms = [s.lower().strip() for s in disease_symptoms]
-        for symptom in symptoms_given:
-            if symptom in normalized_symptoms:
-                matched_diseases[disease] = matched_diseases.get(disease, 0) + 1
+        match_count = sum(1 for s in symptoms_given if s in normalized_symptoms)
+        if match_count > 0:
+            matched_diseases[disease] = match_count
 
-    if not matched_diseases:
-        return None
-
-    sorted_diseases = sorted(matched_diseases.items(), key=lambda x: x[1], reverse=True)
-    response = "🩺 Based on your symptoms, possible diseases are:\n"
-    for disease, count in sorted_diseases:
-        total = len(symptoms_data.get(disease, []))
-        percent = round((count / total) * 100, 1) if total else 0
-        response += f"- {disease} ({count} symptom match, {percent}% match)\n"
-    return response.strip()
+    if matched_diseases:
+        sorted_diseases = sorted(matched_diseases.items(), key=lambda x: x[1], reverse=True)
+        response = "🩺 Based on your symptoms, possible diseases are:\n"
+        for disease, count in sorted_diseases:
+            total_symptoms = len(symptoms_data.get(disease, []))
+            percent = round((count / total_symptoms) * 100, 1) if total_symptoms else 0
+            prevention_list = preventions_data.get(disease, [])
+            prevention_text = f"\n🛡 Prevention: {', '.join(prevention_list)}" if prevention_list else ""
+            response += f"- {disease} ({count} symptom match, {percent}% match){prevention_text}\n"
+        return response.strip()
+    else:
+        return "I couldn't find any disease matching your symptoms exactly. Please consult a doctor if you feel unwell."
 
 def process_disease_query(disease_name):
+    """Return info about a disease, including symptoms and prevention."""
     diseases_data = fetch_json(DISEASES_URL)
     symptoms_data = fetch_json(SYMPTOMS_URL)
     preventions_data = fetch_json(PREVENTIONS_URL)
 
-    disease_key = disease_name.strip()
-    if not disease_key:
-        return None
+    if not disease_name:
+        return "Please provide a disease name to get information."
 
-    # Match disease ignoring case
-    matched_key = None
+    disease_key = None
     for key in diseases_data.keys():
-        if key.lower() == disease_key.lower():
-            matched_key = key
+        if key.lower() == disease_name.lower():
+            disease_key = key
             break
-    if not matched_key:
-        return None
 
-    symptoms = symptoms_data.get(matched_key, [])
-    preventions = preventions_data.get(matched_key, [])
+    if not disease_key:
+        return f"Sorry, I do not have information about '{disease_name}'."
 
-    response = f"Here’s what I found about {matched_key}:"
+    symptoms = symptoms_data.get(disease_key, [])
+    preventions = preventions_data.get(disease_key, [])
+
+    response = f"Here’s what I found about {disease_key}:"
     if symptoms:
         response += f"\n🤒 Symptoms: {', '.join(symptoms)}."
     if preventions:
@@ -102,12 +107,10 @@ def webhook():
             disease_name = parameters.get("diseases") or query_text
             response_text = process_disease_query(disease_name)
         else:
+            # fallback: try symptoms first, then disease info
             response_text = process_symptom_query([query_text]) or process_disease_query(query_text)
 
-        if not response_text:
-            response_text = f"Sorry, I do not have information about '{query_text}'."
-
-        # Return fulfillmentMessages for Dialogflow
+        # Always return fulfillmentMessages to avoid empty response
         return jsonify({
             "fulfillmentMessages": [
                 {"text": {"text": [response_text]}}
@@ -116,7 +119,11 @@ def webhook():
 
     except Exception as e:
         print("Webhook Error:", e)
-        return jsonify({"fulfillmentMessages": [{"text": {"text": ["Sorry, something went wrong."]}}]})
+        return jsonify({
+            "fulfillmentMessages": [
+                {"text": {"text": ["Sorry, something went wrong on the server."]}}
+            ]
+        })
 
 # ================== TWILIO WEBHOOK ==================
 @app.route("/twilio-webhook", methods=["POST"])
