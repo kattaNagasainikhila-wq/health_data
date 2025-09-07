@@ -82,10 +82,10 @@ def process_symptom_query(user_input):
     symptoms_data = fetch_json(SYMPTOMS_URL)
 
     # If input is already a list (from Dialogflow parameters), use it directly
-    if isinstance(user_input, list):
+    if isinstance(user_input, list) and user_input:
         symptoms_given = [s.lower().strip() for s in user_input]
     else:
-        # If string, split by "and" or ","
+        # If string, split by "and" or ",", or use words as fallback
         clean_text = clean_input(user_input)
         symptoms_given = [s.strip() for s in re.split(r"and|,", clean_text) if s.strip()]
 
@@ -124,11 +124,16 @@ def webhook():
 
         if intent == "symptoms_info":
             symptoms_list = parameters.get("symptoms", [])
-            response_text = process_symptom_query(symptoms_list)
+            if symptoms_list:
+                response_text = process_symptom_query(symptoms_list)
+            else:
+                # fallback: use raw user text if entity not extracted
+                response_text = process_symptom_query(query_text)
         elif intent == "disease_info":
             disease_name = parameters.get("diseases") or query_text
             response_text = process_disease_query(disease_name)
         else:
+            # fallback for other intents
             response_text = process_disease_query(query_text) or process_symptom_query(query_text)
 
         if not response_text:
@@ -148,7 +153,6 @@ def twilio_webhook():
         incoming_msg = request.form.get("Body", "").strip()
         print("Twilio input:", incoming_msg)
 
-        # Check if message matches a disease first, else treat as symptom input
         reply = process_disease_query(incoming_msg)
         if not reply:
             reply = process_symptom_query(incoming_msg)
