@@ -108,16 +108,22 @@ def webhook():
     """Dialogflow webhook for fulfillment."""
     try:
         req = request.get_json(force=True)
-        user_input = req.get("queryResult", {}).get("queryText", "").strip()
+        print("Dialogflow request JSON:", json.dumps(req, indent=2))
+
         intent = req.get("queryResult", {}).get("intent", {}).get("displayName", "")
-        print(f"Dialogflow input: {user_input} | Intent: {intent}")
+        parameters = req.get("queryResult", {}).get("parameters", {})
+        query_text = req.get("queryResult", {}).get("queryText", "").strip()
 
-        response_text = None
-
-        if intent == "symptoms_info":  # symptom intent
-            response_text = process_symptom_query(user_input)
-        else:  # default for disease lookup
+        # Use parameter values instead of raw text where possible
+        if intent == "disease_info":
+            user_input = parameters.get("diseases") or query_text
             response_text = process_disease_query(user_input)
+        elif intent == "symptoms_info":
+            user_input = parameters.get("symptoms") or query_text
+            response_text = process_symptom_query(user_input)
+        else:
+            user_input = query_text
+            response_text = process_disease_query(user_input) or process_symptom_query(user_input)
 
         if not response_text:
             response_text = f"Sorry, I do not have information about '{user_input}'."
