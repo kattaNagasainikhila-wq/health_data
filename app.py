@@ -81,13 +81,19 @@ def process_symptom_query(user_input):
     """Process symptom(s) query and return possible diseases."""
     symptoms_data = fetch_json(SYMPTOMS_URL)
 
-    clean_text = clean_input(user_input)
-    symptoms_given = [s.strip() for s in re.split(r"and|,", clean_text) if s.strip()]
+    # If input is already a list (from Dialogflow parameters), use it directly
+    if isinstance(user_input, list):
+        symptoms_given = [s.lower().strip() for s in user_input]
+    else:
+        # If string, split by "and" or ","
+        clean_text = clean_input(user_input)
+        symptoms_given = [s.strip() for s in re.split(r"and|,", clean_text) if s.strip()]
+
     print("Parsed symptoms:", symptoms_given)
 
     matched_diseases = {}
     for disease, symptoms in symptoms_data.items():
-        normalized_symptoms = [s.lower() for s in symptoms]
+        normalized_symptoms = [s.lower().strip() for s in symptoms]
         for symptom in symptoms_given:
             if symptom in normalized_symptoms:
                 matched_diseases[disease] = matched_diseases.get(disease, 0) + 1
@@ -112,34 +118,27 @@ def webhook():
 
         intent = req.get("queryResult", {}).get("intent", {}).get("displayName", "")
         parameters = req.get("queryResult", {}).get("parameters", {})
-        user_input = req.get("queryResult", {}).get("queryText", "").strip()
+        query_text = req.get("queryResult", {}).get("queryText", "").strip()
 
         response_text = None
 
         if intent == "symptoms_info":
-            # Use the symptoms parameter list
             symptoms_list = parameters.get("symptoms", [])
-            if symptoms_list:
-                user_input = ", ".join(symptoms_list)   # pass symptoms to processor
-            response_text = process_symptom_query(user_input)
-
+            response_text = process_symptom_query(symptoms_list)
         elif intent == "disease_info":
-            disease_name = parameters.get("diseases") or user_input
+            disease_name = parameters.get("diseases") or query_text
             response_text = process_disease_query(disease_name)
-
         else:
-            # fallback
-            response_text = process_disease_query(user_input) or process_symptom_query(user_input)
+            response_text = process_disease_query(query_text) or process_symptom_query(query_text)
 
         if not response_text:
-            response_text = f"Sorry, I do not have information about '{user_input}'."
+            response_text = f"Sorry, I do not have information about '{query_text}'."
 
         return jsonify({"fulfillmentText": response_text})
 
     except Exception as e:
         print("Webhook Error:", e)
         return jsonify({"fulfillmentText": "Sorry, something went wrong on the server."})
-
 
 # ================== TWILIO WEBHOOK ==================
 @app.route("/twilio-webhook", methods=["POST"])
@@ -149,6 +148,7 @@ def twilio_webhook():
         incoming_msg = request.form.get("Body", "").strip()
         print("Twilio input:", incoming_msg)
 
+        # Check if message matches a disease first, else treat as symptom input
         reply = process_disease_query(incoming_msg)
         if not reply:
             reply = process_symptom_query(incoming_msg)
