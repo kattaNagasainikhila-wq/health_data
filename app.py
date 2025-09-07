@@ -1,6 +1,6 @@
-
 import os
 import json
+import re
 import requests
 from flask import Flask, request, jsonify, Response
 
@@ -9,9 +9,9 @@ app = Flask(__name__)
 # ---------- GITHUB RAW FILES ----------
 DISEASES_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/diseases.json"
 SYMPTOMS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/symptoms.json"
-PREVENTIONS_URL ="https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/preventions.json"
+PREVENTIONS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/preventions.json"
 
-# Cache for GitHub JSON to avoid fetching every time
+# Cache for GitHub JSON
 data_cache = {}
 
 # ================== HELPERS ==================
@@ -28,6 +28,10 @@ def fetch_json(url):
     except Exception as e:
         print(f"Error fetching {url}: {e}")
         return {}
+
+def clean_input(text):
+    """Normalize and clean user input (remove punctuation, lowercase)."""
+    return re.sub(r"[^\w\s]", "", text.lower())
 
 def find_disease_key(user_input, diseases_data):
     """Return the disease key matching user input or synonym."""
@@ -50,10 +54,12 @@ def get_preventions(disease_name):
     data = fetch_json(PREVENTIONS_URL)
     return data.get(disease_name, [])
 
+# ================== MAIN PROCESSORS ==================
 def process_disease_query(user_input):
-    """Process disease query and return response text."""
+    """Process disease query and return info."""
     diseases_data = fetch_json(DISEASES_URL)
     disease_key = find_disease_key(user_input, diseases_data)
+
     if disease_key:
         symptoms = get_symptoms(disease_key)
         preventions = get_preventions(disease_key)
@@ -69,8 +75,35 @@ def process_disease_query(user_input):
         else:
             response += f"\n(No prevention info available.)"
         return response
-    else:
-        return f"Sorry, I do not have information about '{user_input}'."
+    return None
+
+def process_symptom_query(user_input):
+    """Process symptom(s) query and return possible diseases."""
+    symptoms_data = fetch_json(SYMPTOMS_URL)
+
+    # Clean input: remove punctuation, lowercase
+    clean_text = clean_input(user_input)
+
+    # Split by "and" or "," into individual symptoms
+    symptoms_given = [s.strip() for s in re.split(r"and|,", clean_text) if s.strip()]
+    print("Parsed symptoms:", symptoms_given)
+
+    matched_diseases = {}
+    for disease, symptoms in symptoms_data.items():
+        normalized_symptoms = [s.lower() for s in symptoms]
+        for symptom in symptoms_given:
+            if symptom in normalized_symptoms:
+                matched_diseases[disease] = matched_diseases.get(disease, 0) + 1
+
+    if matched_diseases:
+        sorted_diseases = sorted(matched_diseases.items(), key=lambda x: x[1], reverse=True)
+        response = "🩺 Based on your symptoms, possible diseases are:\n"
+        for disease, count in sorted_diseases:
+            total = len(symptoms_data.get(disease, []))
+            percent = round((count / total) * 100, 1) if total else 0
+            response += f"- {disease} ({count} symptom match, {percent}% match)\n"
+        return response.strip()
+    return None
 
 # ================== DIALOGFLOW WEBHOOK ==================
 @app.route("/webhook", methods=["POST"])
@@ -78,14 +111,15 @@ def webhook():
     """Dialogflow webhook for fulfillment."""
     try:
         req = request.get_json(force=True)
-        intent = req.get("queryResult", {}).get("intent", {}).get("displayName", "")
-        params = req.get("queryResult", {}).get("parameters", {})
+        user_input = req.get("queryResult", {}).get("queryText", "").strip()
+        print("Dialogflow input:", user_input)
 
-        disease_input = params.get("diseases")
-        response_text = "Sorry, I could not find information for that disease."
+        response_text = process_disease_query(user_input)
+        if not response_text:
+            response_text = process_symptom_query(user_input)
 
-        if disease_input:
-            response_text = process_disease_query(disease_input)
+        if not response_text:
+            response_text = f"Sorry, I do not have information about '{user_input}'."
 
         return jsonify({"fulfillmentText": response_text})
 
@@ -99,14 +133,18 @@ def twilio_webhook():
     """Webhook for WhatsApp via Twilio."""
     try:
         incoming_msg = request.form.get("Body", "").strip()
-        from_number = request.form.get("From", "")
+        print("Twilio input:", incoming_msg)
 
         if not incoming_msg:
-            reply = "Please enter a disease name to get info."
+            reply = "Please enter a disease name or symptoms."
         else:
             reply = process_disease_query(incoming_msg)
+            if not reply:
+                reply = process_symptom_query(incoming_msg)
+            if not reply:
+                reply = f"Sorry, I do not have information about '{incoming_msg}'."
 
-        # TwiML response to Twilio
+        # TwiML response
         twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
     <Message>{reply}</Message>
