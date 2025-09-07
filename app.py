@@ -112,17 +112,23 @@ def webhook():
 
         intent = req.get("queryResult", {}).get("intent", {}).get("displayName", "")
         parameters = req.get("queryResult", {}).get("parameters", {})
-        query_text = req.get("queryResult", {}).get("queryText", "").strip()
+        user_input = req.get("queryResult", {}).get("queryText", "").strip()
 
-        # Use parameter values instead of raw text where possible
-        if intent == "disease_info":
-            user_input = parameters.get("diseases") or query_text
-            response_text = process_disease_query(user_input)
-        elif intent == "symptoms_info":
-            user_input = parameters.get("symptoms") or query_text
+        response_text = None
+
+        if intent == "symptoms_info":
+            # Use the symptoms parameter list
+            symptoms_list = parameters.get("symptoms", [])
+            if symptoms_list:
+                user_input = ", ".join(symptoms_list)   # pass symptoms to processor
             response_text = process_symptom_query(user_input)
+
+        elif intent == "disease_info":
+            disease_name = parameters.get("diseases") or user_input
+            response_text = process_disease_query(disease_name)
+
         else:
-            user_input = query_text
+            # fallback
             response_text = process_disease_query(user_input) or process_symptom_query(user_input)
 
         if not response_text:
@@ -133,6 +139,7 @@ def webhook():
     except Exception as e:
         print("Webhook Error:", e)
         return jsonify({"fulfillmentText": "Sorry, something went wrong on the server."})
+
 
 # ================== TWILIO WEBHOOK ==================
 @app.route("/twilio-webhook", methods=["POST"])
