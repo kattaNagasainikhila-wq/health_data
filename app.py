@@ -81,10 +81,7 @@ def process_symptom_query(user_input):
     """Process symptom(s) query and return possible diseases."""
     symptoms_data = fetch_json(SYMPTOMS_URL)
 
-    # Clean input: remove punctuation, lowercase
     clean_text = clean_input(user_input)
-
-    # Split by "and" or "," into individual symptoms
     symptoms_given = [s.strip() for s in re.split(r"and|,", clean_text) if s.strip()]
     print("Parsed symptoms:", symptoms_given)
 
@@ -112,11 +109,15 @@ def webhook():
     try:
         req = request.get_json(force=True)
         user_input = req.get("queryResult", {}).get("queryText", "").strip()
-        print("Dialogflow input:", user_input)
+        intent = req.get("queryResult", {}).get("intent", {}).get("displayName", "")
+        print(f"Dialogflow input: {user_input} | Intent: {intent}")
 
-        response_text = process_disease_query(user_input)
-        if not response_text:
+        response_text = None
+
+        if intent == "symptoms_info":  # symptom intent
             response_text = process_symptom_query(user_input)
+        else:  # default for disease lookup
+            response_text = process_disease_query(user_input)
 
         if not response_text:
             response_text = f"Sorry, I do not have information about '{user_input}'."
@@ -135,16 +136,12 @@ def twilio_webhook():
         incoming_msg = request.form.get("Body", "").strip()
         print("Twilio input:", incoming_msg)
 
-        if not incoming_msg:
-            reply = "Please enter a disease name or symptoms."
-        else:
-            reply = process_disease_query(incoming_msg)
-            if not reply:
-                reply = process_symptom_query(incoming_msg)
-            if not reply:
-                reply = f"Sorry, I do not have information about '{incoming_msg}'."
+        reply = process_disease_query(incoming_msg)
+        if not reply:
+            reply = process_symptom_query(incoming_msg)
+        if not reply:
+            reply = f"Sorry, I do not have information about '{incoming_msg}'."
 
-        # TwiML response
         twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
     <Message>{reply}</Message>
