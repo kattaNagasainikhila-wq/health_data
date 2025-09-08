@@ -1,4 +1,3 @@
-
 import os
 import json
 import requests
@@ -72,6 +71,21 @@ def process_disease_query(user_input):
     else:
         return f"Sorry, I do not have information about '{user_input}'."
 
+def find_diseases_by_symptoms(user_symptoms):
+    """Given a list of symptoms, return matching diseases."""
+    symptoms_data = fetch_json(SYMPTOMS_URL)
+    matched_diseases = []
+
+    for disease, symptoms in symptoms_data.items():
+        matches = [s for s in user_symptoms if s.lower() in [sym.lower() for sym in symptoms]]
+        if matches:
+            matched_diseases.append({
+                "disease": disease,
+                "matched_symptoms": matches
+            })
+
+    return matched_diseases
+
 # ================== DIALOGFLOW WEBHOOK ==================
 @app.route("/webhook", methods=["POST"])
 def webhook():
@@ -81,11 +95,23 @@ def webhook():
         intent = req.get("queryResult", {}).get("intent", {}).get("displayName", "")
         params = req.get("queryResult", {}).get("parameters", {})
 
-        disease_input = params.get("diseases")
-        response_text = "Sorry, I could not find information for that disease."
+        response_text = "Sorry, I could not find relevant information."
 
-        if disease_input:
+        # Case 1: User provides a disease name
+        if params.get("diseases"):
+            disease_input = params.get("diseases")
             response_text = process_disease_query(disease_input)
+
+        # Case 2: User provides symptoms
+        elif params.get("symptoms"):
+            user_symptoms = params.get("symptoms")
+            matches = find_diseases_by_symptoms(user_symptoms)
+            if matches:
+                response_text = "Based on the symptoms, possible diseases are:\n"
+                for match in matches:
+                    response_text += f"\n🦠 {match['disease']} (matched: {', '.join(match['matched_symptoms'])})"
+            else:
+                response_text = "I couldn't find any diseases matching those symptoms."
 
         return jsonify({"fulfillmentText": response_text})
 
@@ -99,12 +125,23 @@ def twilio_webhook():
     """Webhook for WhatsApp via Twilio."""
     try:
         incoming_msg = request.form.get("Body", "").strip()
-        from_number = request.form.get("From", "")
 
         if not incoming_msg:
-            reply = "Please enter a disease name to get info."
+            reply = "Please enter a disease name or symptoms."
         else:
-            reply = process_disease_query(incoming_msg)
+            # Check if multiple symptoms provided (comma-separated)
+            if "," in incoming_msg:
+                symptoms = [s.strip() for s in incoming_msg.split(",")]
+                matches = find_diseases_by_symptoms(symptoms)
+                if matches:
+                    reply = "Possible diseases based on your symptoms:\n"
+                    for match in matches:
+                        reply += f"\n🦠 {match['disease']} (matched: {', '.join(match['matched_symptoms'])})"
+                else:
+                    reply = "No diseases found for those symptoms."
+            else:
+                # Assume it's a disease query
+                reply = process_disease_query(incoming_msg)
 
         # TwiML response to Twilio
         twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
