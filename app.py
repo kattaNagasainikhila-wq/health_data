@@ -1,152 +1,170 @@
 import os
-import json
-import re
 import requests
-from flask import Flask, request, jsonify, Response
+from flask import Flask, request, jsonify
+from twilio.twiml.messaging_response import MessagingResponse
 
 app = Flask(__name__)
 
-# ---------- GITHUB RAW FILES ----------
+# ---------- STATIC DATA URLs ----------
 DISEASES_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/diseases.json"
 SYMPTOMS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/symptoms.json"
 PREVENTIONS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/preventions.json"
 
+# ---------- WHO Outbreak API ----------
+WHO_API_URL = (
+    "https://www.who.int/api/emergencies/diseaseoutbreaknews"
+    "?sf_provider=dynamicProvider372&sf_culture=en"
+    "&$orderby=PublicationDateAndTime%20desc"
+    "&$expand=EmergencyEvent"
+    "&$select=Title,TitleSuffix,OverrideTitle,UseOverrideTitle,regionscountries,"
+    "ItemDefaultUrl,FormattedDate,PublicationDateAndTime"
+    "&%24format=json&%24top=10&%24count=true"
+)
+
+# Cache for static JSON data
 data_cache = {}
 
-# ============== HELPERS =================
-def fetch_json(url):
+# ================== HELPERS ==================
+def get_data_from_github(url):
+    """Fetch and cache JSON data from GitHub raw URLs."""
     if url in data_cache:
         return data_cache[url]
     try:
-        response = requests.get(url, timeout=5)
+        response = requests.get(url, timeout=10)
         response.raise_for_status()
         data = response.json()
         data_cache[url] = data
         return data
     except Exception as e:
-        print(f"Error fetching {url}: {e}")
-        return {}
+        print(f"Error fetching from GitHub: {e}")
+        return None
 
-def clean_input(text):
-    return re.sub(r"[^\w\s]", "", text.lower())
 
-# ================== PROCESSORS ==================
-def process_symptom_query(symptoms_list):
-    """Return possible diseases based on symptoms, always returns text."""
-    symptoms_data = fetch_json(SYMPTOMS_URL)
-    preventions_data = fetch_json(PREVENTIONS_URL)
+def get_disease_symptoms(disease_name):
+    """Get symptoms for a disease."""
+    data = get_data_from_github(SYMPTOMS_URL)
+    if data:
+        return data.get(disease_name, [])
+    return []
 
-    if not symptoms_list:
-        return "Sorry, I couldn't detect any symptoms. Please provide your symptoms clearly."
 
-    symptoms_given = [s.lower().strip() for s in symptoms_list]
-    matched_diseases = {}
+def get_disease_preventions(disease_name):
+    """Get prevention measures for a disease."""
+    data = get_data_from_github(PREVENTIONS_URL)
+    if data:
+        return data.get(disease_name, [])
+    return []
 
-    for disease, disease_symptoms in symptoms_data.items():
-        normalized_symptoms = [s.lower().strip() for s in disease_symptoms]
-        match_count = sum(1 for s in symptoms_given if s in normalized_symptoms)
-        if match_count > 0:
-            matched_diseases[disease] = match_count
 
-    if matched_diseases:
-        sorted_diseases = sorted(matched_diseases.items(), key=lambda x: x[1], reverse=True)
-        response = "🩺 Based on your symptoms, possible diseases are:\n"
-        for disease, count in sorted_diseases:
-            total_symptoms = len(symptoms_data.get(disease, []))
-            percent = round((count / total_symptoms) * 100, 1) if total_symptoms else 0
-            prevention_list = preventions_data.get(disease, [])
-            prevention_text = f"\n🛡 Prevention: {', '.join(prevention_list)}" if prevention_list else ""
-            response += f"- {disease} ({count} symptom match, {percent}% match){prevention_text}\n"
-        return response.strip()
-    else:
-        return "I couldn't find any disease matching your symptoms exactly. Please consult a doctor if you feel unwell."
+def match_symptoms_to_diseases(symptoms_list):
+    """Find possible diseases from given symptoms."""
+    data = get_data_from_github(SYMPTOMS_URL)
+    if not data:
+        return []
 
-def process_disease_query(disease_name):
-    """Return info about a disease, including symptoms and prevention."""
-    diseases_data = fetch_json(DISEASES_URL)
-    symptoms_data = fetch_json(SYMPTOMS_URL)
-    preventions_data = fetch_json(PREVENTIONS_URL)
+    matches = {}
+    for disease, disease_symptoms in data.items():
+        normalized = [s.lower() for s in disease_symptoms]
+        count = sum(1 for s in symptoms_list if s.lower() in normalized)
+        if count > 0:
+            matches[disease] = count
 
-    if not disease_name:
-        return "Please provide a disease name to get information."
+    return sorted(matches.items(), key=lambda x: x[1], reverse=True)
 
-    disease_key = None
-    for key in diseases_data.keys():
-        if key.lower() == disease_name.lower():
-            disease_key = key
-            break
 
-    if not disease_key:
-        return f"Sorry, I do not have information about '{disease_name}'."
+def get_who_outbreak_data():
+    """Fetch outbreak news directly from WHO API."""
+    try:
+        response = requests.get(WHO_API_URL, timeout=10)
+        response.raise_for_status()
+        data = response.json()
 
-    symptoms = symptoms_data.get(disease_key, [])
-    preventions = preventions_data.get(disease_key, [])
+        if "value" not in data or not data["value"]:
+            return None
 
-    response = f"Here’s what I found about {disease_key}:"
-    if symptoms:
-        response += f"\n🤒 Symptoms: {', '.join(symptoms)}."
-    if preventions:
-        response += f"\n🛡 Prevention: {', '.join(preventions)}"
-    return response
+        outbreaks = []
+        for item in data["value"][:5]:  # only latest 5
+            title = item.get("OverrideTitle") or item.get("Title")
+            date = item.get("FormattedDate", "Unknown date")
+            url = "https://www.who.int" + item.get("ItemDefaultUrl", "")
+            outbreaks.append(f"🦠 {title} ({date})\n🔗 {url}")
 
-# ================== DIALOGFLOW WEBHOOK ==================
-@app.route("/webhook", methods=["POST"])
+        return outbreaks
+    except Exception as e:
+        print(f"Error fetching WHO outbreak data: {e}")
+        return None
+
+
+# ================== WEBHOOK (Dialogflow + Twilio) ==================
+@app.route('/webhook', methods=['POST'])
 def webhook():
-    try:
-        req = request.get_json(force=True)
-        intent = req.get("queryResult", {}).get("intent", {}).get("displayName", "")
-        parameters = req.get("queryResult", {}).get("parameters", {})
-        query_text = req.get("queryResult", {}).get("queryText", "").strip()
+    reply = "I'm sorry, I couldn't find that information. Please try again."
 
-        response_text = None
+    # ---------- Check if request is from Twilio (form-data) ----------
+    if request.content_type != "application/json":
+        user_message = request.form.get("Body", "").strip().lower()
 
-        if intent == "symptoms_info":
-            symptoms_list = parameters.get("symptoms", [])
-            response_text = process_symptom_query(symptoms_list) or process_symptom_query([query_text])
-        elif intent == "disease_info":
-            disease_name = parameters.get("diseases") or query_text
-            response_text = process_disease_query(disease_name)
+        if "symptom" in user_message:
+            reply = "Please provide your symptoms clearly (e.g., fever, cough)."
+        elif "prevent" in user_message:
+            reply = "Please provide a disease name to get its prevention measures."
+        elif "outbreak" in user_message or "disease" in user_message:
+            outbreaks = get_who_outbreak_data()
+            if not outbreaks:
+                reply = "⚠️ Unable to fetch outbreak data right now."
+            else:
+                reply = "🌍 Latest WHO Outbreak News:\n\n" + "\n\n".join(outbreaks[:3])
         else:
-            # fallback: try symptoms first, then disease info
-            response_text = process_symptom_query([query_text]) or process_disease_query(query_text)
+            reply = "Hi! 👋 You can ask me about disease symptoms, preventions, or latest outbreaks."
 
-        # Always return fulfillmentMessages to avoid empty response
-        return jsonify({
-            "fulfillmentMessages": [
-                {"text": {"text": [response_text]}}
-            ]
-        })
+        resp = MessagingResponse()
+        resp.message(reply)
+        return str(resp)
 
-    except Exception as e:
-        print("Webhook Error:", e)
-        return jsonify({
-            "fulfillmentMessages": [
-                {"text": {"text": ["Sorry, something went wrong on the server."]}}
-            ]
-        })
+    # ---------- Otherwise it's Dialogflow (JSON) ----------
+    req = request.get_json(silent=True, force=True)
+    intent = req.get('queryResult', {}).get('intent', {}).get('displayName', '')
+    params = req.get('queryResult', {}).get('parameters', {})
+    query_text = req.get('queryResult', {}).get('queryText', '').strip()
 
-# ================== TWILIO WEBHOOK ==================
-@app.route("/twilio-webhook", methods=["POST"])
-def twilio_webhook():
-    try:
-        incoming_msg = request.form.get("Body", "").strip()
-        reply = process_disease_query(incoming_msg) or process_symptom_query([incoming_msg])
-        if not reply:
-            reply = f"Sorry, I do not have information about '{incoming_msg}'."
+    # --------- Disease Info Intent ---------
+    if intent == 'disease_info':
+        disease_name = params.get('diseases') or query_text
+        if disease_name:
+            symptoms = get_disease_symptoms(disease_name)
+            prevention = get_disease_preventions(disease_name)
 
-        twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
-<Response>
-    <Message>{reply}</Message>
-</Response>"""
-        return Response(twiml, mimetype="text/xml")
+            reply = f"ℹ️ Information about {disease_name.title()}:\n"
+            reply += f"🤒 Symptoms: {', '.join(symptoms)}\n" if symptoms else "No symptoms data available.\n"
+            reply += f"🛡 Prevention: {', '.join(prevention)}" if prevention else "No prevention info available."
 
-    except Exception as e:
-        print("Twilio Webhook Error:", e)
-        return Response(
-            """<?xml version="1.0" encoding="UTF-8"?><Response><Message>Sorry, something went wrong.</Message></Response>""",
-            mimetype="text/xml"
-        )
+    # --------- Symptoms Info Intent ---------
+    elif intent == 'symptoms_info':
+        symptoms_list = params.get('symptoms', [])
+        matches = match_symptoms_to_diseases(symptoms_list)
+
+        if matches:
+            reply = "🩺 Based on your symptoms, possible diseases are:\n\n"
+            for disease, count in matches:
+                all_symptoms = get_disease_symptoms(disease)
+                percent = round((count / len(all_symptoms)) * 100, 1) if all_symptoms else 0
+                prevention = get_disease_preventions(disease)
+                prevention_text = f"\n   🛡 Prevention: {', '.join(prevention)}" if prevention else ""
+                reply += f"- {disease} ({count} symptom match, {percent}% match){prevention_text}\n"
+        else:
+            reply = "I couldn't match your symptoms to any disease. Please consult a doctor."
+
+    # --------- WHO Outbreak Intent ---------
+    elif intent == 'disease_outbreak.general':
+        outbreaks = get_who_outbreak_data()
+        if not outbreaks:
+            reply = "⚠️ Unable to fetch outbreak data right now."
+        else:
+            reply = "🌍 Latest WHO Outbreak News:\n\n" + "\n\n".join(outbreaks)
+
+    return jsonify({'fulfillmentText': reply})
+
 
 # ================== MAIN ==================
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(port=5000, debug=True)
