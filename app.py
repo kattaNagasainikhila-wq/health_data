@@ -87,6 +87,7 @@ def find_diseases_by_symptoms(user_symptoms):
     return matched_diseases
 
 # ================== DIALOGFLOW WEBHOOK ==================
+# ================== DIALOGFLOW WEBHOOK ==================
 @app.route("/webhook", methods=["POST"])
 def webhook():
     """Dialogflow webhook for fulfillment."""
@@ -113,11 +114,13 @@ def webhook():
             else:
                 response_text = "I couldn't find any diseases matching those symptoms."
 
+        # Always return fulfillmentText (never blank)
         return jsonify({"fulfillmentText": response_text})
 
     except Exception as e:
         print("Webhook Error:", e)
         return jsonify({"fulfillmentText": "Sorry, something went wrong on the server."})
+
 
 # ================== TWILIO WEBHOOK ==================
 @app.route("/twilio-webhook", methods=["POST"])
