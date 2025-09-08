@@ -40,7 +40,7 @@ def get_data_from_github(url):
         return None
 
 
-def get_disease_symptoms(disease_name):
+def get_disease_symptoms(disease_info):
     """Get symptoms for a disease."""
     data = get_data_from_github(SYMPTOMS_URL)
     if data:
@@ -48,7 +48,7 @@ def get_disease_symptoms(disease_name):
     return []
 
 
-def get_disease_preventions(disease_name):
+def get_disease_preventions(disease_info):
     """Get prevention measures for a disease."""
     data = get_data_from_github(PREVENTIONS_URL)
     if data:
@@ -131,10 +131,10 @@ def webhook():
     if intent == 'disease_info':
         disease_name = params.get('diseases') or query_text
         if disease_name:
-            symptoms = get_disease_symptoms(disease_name)
-            prevention = get_disease_preventions(disease_name)
+            symptoms = get_disease_symptoms(disease_info)
+            prevention = get_disease_preventions(disease_info)
 
-            reply = f"ℹ️ Information about {disease_name.title()}:\n"
+            reply = f"ℹ️ Information about {disease_info.title()}:\n"
             reply += f"🤒 Symptoms: {', '.join(symptoms)}\n" if symptoms else "No symptoms data available.\n"
             reply += f"🛡 Prevention: {', '.join(prevention)}" if prevention else "No prevention info available."
 
