@@ -8,7 +8,7 @@ app = Flask(__name__)
 # ---------- GITHUB RAW FILES ----------
 DISEASES_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/diseases.json"
 SYMPTOMS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/symptoms.json"
-PREVENTIONS_URL ="https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/preventions.json"
+PREVENTIONS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/preventions.json"
 
 # Cache for GitHub JSON to avoid fetching every time
 data_cache = {}
@@ -87,13 +87,11 @@ def find_diseases_by_symptoms(user_symptoms):
     return matched_diseases
 
 # ================== DIALOGFLOW WEBHOOK ==================
-# ================== DIALOGFLOW WEBHOOK ==================
 @app.route("/webhook", methods=["POST"])
 def webhook():
     """Dialogflow webhook for fulfillment."""
     try:
         req = request.get_json(force=True)
-        intent = req.get("queryResult", {}).get("intent", {}).get("displayName", "")
         params = req.get("queryResult", {}).get("parameters", {})
 
         response_text = "Sorry, I could not find relevant information."
@@ -120,7 +118,6 @@ def webhook():
     except Exception as e:
         print("Webhook Error:", e)
         return jsonify({"fulfillmentText": "Sorry, something went wrong on the server."})
-
 
 # ================== TWILIO WEBHOOK ==================
 @app.route("/twilio-webhook", methods=["POST"])
