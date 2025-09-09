@@ -9,9 +9,9 @@ app = Flask(__name__)
 DISEASES_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/diseases.json"
 SYMPTOMS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/symptoms.json"
 PREVENTIONS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/preventions.json"
-MAPPING_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/mapping.json"  # symptom → diseases
+MAPPING_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/mapping.json"
 
-# Cache for GitHub JSON to avoid fetching every time
+# Cache for GitHub JSON
 data_cache = {}
 
 # ================== HELPERS ==================
@@ -41,17 +41,22 @@ def find_disease_key(user_input, diseases_data):
     return None
 
 def get_symptoms(disease_name):
-    """Get symptoms list from symptoms JSON."""
+    """Get symptoms for a disease."""
     data = fetch_json(SYMPTOMS_URL)
     return data.get(disease_name, [])
 
 def get_preventions(disease_name):
-    """Get prevention list from prevention JSON."""
+    """Get preventions for a disease."""
     data = fetch_json(PREVENTIONS_URL)
     return data.get(disease_name, [])
 
+def get_diseases_from_symptom(symptom):
+    """Find possible diseases from a symptom (reverse lookup)."""
+    data = fetch_json(MAPPING_URL)
+    return data.get(symptom.lower(), [])
+
 def process_disease_query(user_input):
-    """Process query when input is a disease name."""
+    """Handle disease name input."""
     diseases_data = fetch_json(DISEASES_URL)
     disease_key = find_disease_key(user_input, diseases_data)
     if disease_key:
@@ -70,43 +75,35 @@ def process_disease_query(user_input):
             response += f"\n(No prevention info available.)"
         return response
     else:
-        # if not found as a disease, check if it's a symptom
-        return process_symptom_query(user_input)
+        return None  # so we can fall back to symptom query
 
 def process_symptom_query(user_input):
-    """Process query when input is a symptom name."""
-    mapping_data = fetch_json(MAPPING_URL)
-    possible_diseases = mapping_data.get(user_input, [])  # case-sensitive lookup first
-
-    # try case-insensitive match if not found
-    if not possible_diseases:
-        for symptom, diseases in mapping_data.items():
-            if symptom.lower() == user_input.lower():
-                possible_diseases = diseases
-                break
-
-    if possible_diseases:
-        return f"🩺 The symptom '{user_input}' is commonly seen in: {', '.join(possible_diseases)}."
-    else:
-        return f"Sorry, I couldn’t find any diseases linked to the symptom '{user_input}'."
+    """Handle symptom input."""
+    diseases = get_diseases_from_symptom(user_input)
+    if diseases:
+        return f"🩺 The symptom '{user_input}' may be related to: {', '.join(diseases)}."
+    return None
 
 # ================== DIALOGFLOW WEBHOOK ==================
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    """Dialogflow webhook for fulfillment."""
+    """Dialogflow webhook."""
     try:
         req = request.get_json(force=True)
         intent = req.get("queryResult", {}).get("intent", {}).get("displayName", "")
         params = req.get("queryResult", {}).get("parameters", {})
 
-        disease_input = params.get("diseases")
-        symptom_input = params.get("symptoms")
-        response_text = "Sorry, I could not find information for your query."
+        user_input = params.get("diseases") or params.get("symptoms")
+        response_text = "Sorry, I could not find any information."
 
-        if disease_input:
-            response_text = process_disease_query(disease_input)
-        elif symptom_input:
-            response_text = process_symptom_query(symptom_input)
+        if user_input:
+            # Try disease first
+            response_text = process_disease_query(user_input)
+            if not response_text:
+                # If not a disease, try symptom lookup
+                response_text = process_symptom_query(user_input)
+            if not response_text:
+                response_text = f"Sorry, no data available for '{user_input}'."
 
         return jsonify({"fulfillmentText": response_text})
 
@@ -122,11 +119,17 @@ def twilio_webhook():
         incoming_msg = request.form.get("Body", "").strip()
 
         if not incoming_msg:
-            reply = "Please enter a disease or symptom name."
+            reply = "Please enter a disease or symptom."
         else:
-            reply = process_disease_query(incoming_msg)  # process_disease_query also checks symptoms
+            # Try disease first
+            reply = process_disease_query(incoming_msg)
+            if not reply:
+                # Then try symptom
+                reply = process_symptom_query(incoming_msg)
+            if not reply:
+                reply = f"Sorry, no data available for '{incoming_msg}'."
 
-        # TwiML response to Twilio
+        # TwiML response
         twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
     <Message>{reply}</Message>
@@ -135,4 +138,12 @@ def twilio_webhook():
         return Response(twiml, mimetype="text/xml")
 
     except Exception as e:
-        print("Twilio We
+        print("Twilio Webhook Error:", e)
+        return Response(
+            """<?xml version="1.0" encoding="UTF-8"?><Response><Message>Sorry, something went wrong.</Message></Response>""",
+            mimetype="text/xml"
+        )
+
+# ================== MAIN ==================
+if __name__ == "__main__":
+    app.run(port=5000, debug=True)
