@@ -78,12 +78,14 @@ def process_disease_query(user_input):
         return f"Sorry, I do not have information about '{user_input}'."
 
 def process_symptom_query(symptoms_list):
-    """Process symptom query and return possible diseases."""
+    """Process symptom query and return possible diseases (case-insensitive)."""
     mapping_data = fetch_json(MAPPING_URL)
     possible_diseases = set()
 
-    for symptom in symptoms_list:
-        diseases = mapping_data.get(symptom.lower(), [])
+    normalized_symptoms = [s.lower() for s in symptoms_list]
+
+    for symptom in normalized_symptoms:
+        diseases = mapping_data.get(symptom, [])
         if diseases:
             possible_diseases.update(diseases)
 
@@ -118,7 +120,10 @@ def webhook():
             if isinstance(symptoms, str):
                 symptoms = [symptoms]
             if symptoms:
-                response_text = process_symptom_query(symptoms)
+                # normalize symptoms here
+                original_symptoms = symptoms
+                symptoms = [s.lower() for s in symptoms]
+                response_text = process_symptom_query(original_symptoms)
 
         return jsonify({"fulfillmentText": response_text})
 
