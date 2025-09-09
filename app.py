@@ -78,6 +78,7 @@ def get_diseases_by_symptom(symptom_name):
     return data.get(symptom_name.lower(), [])
 
 # ================== DIALOGFLOW WEBHOOK ==================
+# ================== DIALOGFLOW WEBHOOK ==================
 @app.route("/webhook", methods=["POST"])
 def webhook():
     """Dialogflow webhook for fulfillment."""
@@ -91,17 +92,22 @@ def webhook():
         # Case 1: Disease query
         disease_input = params.get("diseases")
         if disease_input:
+            if isinstance(disease_input, list):
+                disease_input = disease_input[0]
             response_text = process_disease_query(disease_input)
 
         # Case 2: Symptom query
         elif intent == "symptoms_info":
             symptom_input = params.get("symptoms")
             if symptom_input:
-                diseases = get_diseases_by_symptom(symptom_input[0])
+                # Ensure it's a string
+                if isinstance(symptom_input, list):
+                    symptom_input = symptom_input[0]
+                diseases = get_diseases_by_symptom(symptom_input)
                 if diseases:
-                    response_text = f"🦠 The symptom '{symptom_input[0]}' is commonly seen in: {', '.join(diseases)}."
+                    response_text = f"🦠 The symptom '{symptom_input}' is commonly seen in: {', '.join(diseases)}."
                 else:
-                    response_text = f"Sorry, I don’t have diseases mapped for the symptom '{symptom_input[0]}'."
+                    response_text = f"Sorry, I don’t have diseases mapped for the symptom '{symptom_input}'."
 
         return jsonify({"fulfillmentText": response_text})
 
