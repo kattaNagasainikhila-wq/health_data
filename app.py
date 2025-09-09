@@ -1,4 +1,3 @@
-
 import os
 import json
 import requests
@@ -9,7 +8,8 @@ app = Flask(__name__)
 # ---------- GITHUB RAW FILES ----------
 DISEASES_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/diseases.json"
 SYMPTOMS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/symptoms.json"
-PREVENTIONS_URL ="https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/preventions.json"
+PREVENTIONS_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/preventions.json"
+MAPPING_URL = "https://raw.githubusercontent.com/kattaNagasainikhila-wq/health_data/main/mapping.json"  # symptom → diseases
 
 # Cache for GitHub JSON to avoid fetching every time
 data_cache = {}
@@ -51,7 +51,7 @@ def get_preventions(disease_name):
     return data.get(disease_name, [])
 
 def process_disease_query(user_input):
-    """Process disease query and return response text."""
+    """Process query when input is a disease name."""
     diseases_data = fetch_json(DISEASES_URL)
     disease_key = find_disease_key(user_input, diseases_data)
     if disease_key:
@@ -70,7 +70,25 @@ def process_disease_query(user_input):
             response += f"\n(No prevention info available.)"
         return response
     else:
-        return f"Sorry, I do not have information about '{user_input}'."
+        # if not found as a disease, check if it's a symptom
+        return process_symptom_query(user_input)
+
+def process_symptom_query(user_input):
+    """Process query when input is a symptom name."""
+    mapping_data = fetch_json(MAPPING_URL)
+    possible_diseases = mapping_data.get(user_input, [])  # case-sensitive lookup first
+
+    # try case-insensitive match if not found
+    if not possible_diseases:
+        for symptom, diseases in mapping_data.items():
+            if symptom.lower() == user_input.lower():
+                possible_diseases = diseases
+                break
+
+    if possible_diseases:
+        return f"🩺 The symptom '{user_input}' is commonly seen in: {', '.join(possible_diseases)}."
+    else:
+        return f"Sorry, I couldn’t find any diseases linked to the symptom '{user_input}'."
 
 # ================== DIALOGFLOW WEBHOOK ==================
 @app.route("/webhook", methods=["POST"])
@@ -82,10 +100,13 @@ def webhook():
         params = req.get("queryResult", {}).get("parameters", {})
 
         disease_input = params.get("diseases")
-        response_text = "Sorry, I could not find information for that disease."
+        symptom_input = params.get("symptoms")
+        response_text = "Sorry, I could not find information for your query."
 
         if disease_input:
             response_text = process_disease_query(disease_input)
+        elif symptom_input:
+            response_text = process_symptom_query(symptom_input)
 
         return jsonify({"fulfillmentText": response_text})
 
@@ -99,12 +120,11 @@ def twilio_webhook():
     """Webhook for WhatsApp via Twilio."""
     try:
         incoming_msg = request.form.get("Body", "").strip()
-        from_number = request.form.get("From", "")
 
         if not incoming_msg:
-            reply = "Please enter a disease name to get info."
+            reply = "Please enter a disease or symptom name."
         else:
-            reply = process_disease_query(incoming_msg)
+            reply = process_disease_query(incoming_msg)  # process_disease_query also checks symptoms
 
         # TwiML response to Twilio
         twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
@@ -115,12 +135,4 @@ def twilio_webhook():
         return Response(twiml, mimetype="text/xml")
 
     except Exception as e:
-        print("Twilio Webhook Error:", e)
-        return Response(
-            """<?xml version="1.0" encoding="UTF-8"?><Response><Message>Sorry, something went wrong.</Message></Response>""",
-            mimetype="text/xml"
-        )
-
-# ================== MAIN ==================
-if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+        print("Twilio We
