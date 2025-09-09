@@ -50,11 +50,6 @@ def get_preventions(disease_name):
     data = fetch_json(PREVENTIONS_URL)
     return data.get(disease_name, [])
 
-def get_diseases_by_symptom(symptom):
-    """Get diseases associated with a given symptom from mapping.json."""
-    mapping_data = fetch_json(MAPPING_URL)
-    return mapping_data.get(symptom.lower(), [])
-
 def process_disease_query(user_input):
     """Process disease query and return response text."""
     diseases_data = fetch_json(DISEASES_URL)
@@ -82,12 +77,16 @@ def process_symptom_query(symptoms_list):
     mapping_data = fetch_json(MAPPING_URL)
     possible_diseases = set()
 
-    normalized_symptoms = [s.lower() for s in symptoms_list]
-
-    for symptom in normalized_symptoms:
-        diseases = mapping_data.get(symptom, [])
-        if diseases:
-            possible_diseases.update(diseases)
+    for symptom in symptoms_list:
+        symptom_lower = symptom.lower()
+        found = False
+        for key, diseases in mapping_data.items():
+            if key.lower() == symptom_lower:
+                possible_diseases.update(diseases)
+                found = True
+                break
+        if not found:
+            print(f"Symptom not found in mapping: {symptom}")
 
     if possible_diseases:
         return f"🦠 Based on the symptom(s) {', '.join(symptoms_list)}, possible diseases are: {', '.join(possible_diseases)}."
@@ -120,10 +119,7 @@ def webhook():
             if isinstance(symptoms, str):
                 symptoms = [symptoms]
             if symptoms:
-                # normalize symptoms here
-                original_symptoms = symptoms
-                symptoms = [s.lower() for s in symptoms]
-                response_text = process_symptom_query(original_symptoms)
+                response_text = process_symptom_query(symptoms)
 
         return jsonify({"fulfillmentText": response_text})
 
