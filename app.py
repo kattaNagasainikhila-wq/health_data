@@ -50,6 +50,11 @@ def get_preventions(disease_name):
     data = fetch_json(PREVENTIONS_URL)
     return data.get(disease_name, [])
 
+def get_diseases_by_symptom(symptom):
+    """Get diseases associated with a given symptom from mapping.json."""
+    mapping_data = fetch_json(MAPPING_URL)
+    return mapping_data.get(symptom.lower(), [])
+
 def process_disease_query(user_input):
     """Process disease query and return response text."""
     diseases_data = fetch_json(DISEASES_URL)
@@ -73,11 +78,22 @@ def process_disease_query(user_input):
         return f"Sorry, I do not have information about '{user_input}'."
 
 def process_symptom_query(symptoms_list):
-    """Process symptom query and return possible diseases (case-insensitive)."""
+    """Process symptom query and return possible diseases (multi-symptom support, case-insensitive)."""
     mapping_data = fetch_json(MAPPING_URL)
     possible_diseases = set()
 
-    for symptom in symptoms_list:
+    # Normalize symptoms: split by comma if needed and strip whitespace
+    normalized_symptoms = []
+    for s in symptoms_list:
+        if "," in s:
+            parts = [part.strip() for part in s.split(",") if part.strip()]
+            normalized_symptoms.extend(parts)
+        else:
+            normalized_symptoms.append(s.strip())
+
+    # Check each symptom against mapping
+    not_found = []
+    for symptom in normalized_symptoms:
         symptom_lower = symptom.lower()
         found = False
         for key, diseases in mapping_data.items():
@@ -86,12 +102,16 @@ def process_symptom_query(symptoms_list):
                 found = True
                 break
         if not found:
-            print(f"Symptom not found in mapping: {symptom}")
+            not_found.append(symptom)
 
+    # Build response
+    response_parts = []
     if possible_diseases:
-        return f"🦠 Based on the symptom(s) {', '.join(symptoms_list)}, possible diseases are: {', '.join(possible_diseases)}."
-    else:
-        return f"Sorry, I don’t have diseases mapped for the given symptom(s): {', '.join(symptoms_list)}."
+        response_parts.append(f"🦠 Based on the symptom(s) {', '.join(normalized_symptoms)}, possible diseases are: {', '.join(possible_diseases)}.")
+    if not_found:
+        response_parts.append(f"⚠️ Symptoms not found in mapping: {', '.join(not_found)}.")
+    
+    return "\n".join(response_parts) if response_parts else f"Sorry, no disease info found for the given symptom(s)."
 
 # ================== DIALOGFLOW WEBHOOK ==================
 @app.route("/webhook", methods=["POST"])
