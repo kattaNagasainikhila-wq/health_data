@@ -50,6 +50,11 @@ def get_preventions(disease_name):
     data = fetch_json(PREVENTIONS_URL)
     return data.get(disease_name, [])
 
+def get_diseases_by_symptom(symptom):
+    """Get diseases associated with a given symptom from mapping.json."""
+    mapping_data = fetch_json(MAPPING_URL)
+    return mapping_data.get(symptom.lower(), [])
+
 def process_disease_query(user_input):
     """Process disease query and return response text."""
     diseases_data = fetch_json(DISEASES_URL)
@@ -72,42 +77,48 @@ def process_disease_query(user_input):
     else:
         return f"Sorry, I do not have information about '{user_input}'."
 
-def get_diseases_by_symptom(symptom_name):
-    """Fetch diseases list from mapping.json based on symptom."""
-    data = fetch_json(MAPPING_URL)
-    return data.get(symptom_name.lower(), [])
+def process_symptom_query(symptoms_list):
+    """Process symptom query and return possible diseases."""
+    mapping_data = fetch_json(MAPPING_URL)
+    possible_diseases = set()
 
-# ================== DIALOGFLOW WEBHOOK ==================
+    for symptom in symptoms_list:
+        diseases = mapping_data.get(symptom.lower(), [])
+        if diseases:
+            possible_diseases.update(diseases)
+
+    if possible_diseases:
+        return f"🦠 Based on the symptom(s) {', '.join(symptoms_list)}, possible diseases are: {', '.join(possible_diseases)}."
+    else:
+        return f"Sorry, I don’t have diseases mapped for the given symptom(s): {', '.join(symptoms_list)}."
+
 # ================== DIALOGFLOW WEBHOOK ==================
 @app.route("/webhook", methods=["POST"])
 def webhook():
     """Dialogflow webhook for fulfillment."""
     try:
         req = request.get_json(force=True)
+        print("Dialogflow Request:", json.dumps(req, indent=2))  # DEBUG LOG
+
         intent = req.get("queryResult", {}).get("intent", {}).get("displayName", "")
         params = req.get("queryResult", {}).get("parameters", {})
 
         response_text = "Sorry, I could not find information."
 
-        # Case 1: Disease query
+        # Case 1: Disease info
         disease_input = params.get("diseases")
         if disease_input:
-            if isinstance(disease_input, list):
+            if isinstance(disease_input, list) and disease_input:
                 disease_input = disease_input[0]
             response_text = process_disease_query(disease_input)
 
-        # Case 2: Symptom query
+        # Case 2: Symptom to disease mapping
         elif intent == "symptoms_info":
-            symptom_input = params.get("symptoms")
-            if symptom_input:
-                # Ensure it's a string
-                if isinstance(symptom_input, list):
-                    symptom_input = symptom_input[0]
-                diseases = get_diseases_by_symptom(symptom_input)
-                if diseases:
-                    response_text = f"🦠 The symptom '{symptom_input}' is commonly seen in: {', '.join(diseases)}."
-                else:
-                    response_text = f"Sorry, I don’t have diseases mapped for the symptom '{symptom_input}'."
+            symptoms = params.get("symptoms", [])
+            if isinstance(symptoms, str):
+                symptoms = [symptoms]
+            if symptoms:
+                response_text = process_symptom_query(symptoms)
 
         return jsonify({"fulfillmentText": response_text})
 
@@ -121,18 +132,20 @@ def twilio_webhook():
     """Webhook for WhatsApp via Twilio."""
     try:
         incoming_msg = request.form.get("Body", "").strip()
+        from_number = request.form.get("From", "")
 
         if not incoming_msg:
-            reply = "Please enter a disease name or a symptom to get info."
+            reply = "Please enter a disease name or symptom to get info."
         else:
-            # Try disease query first
-            reply = process_disease_query(incoming_msg)
+            # First try as disease
+            diseases_data = fetch_json(DISEASES_URL)
+            disease_key = find_disease_key(incoming_msg, diseases_data)
 
-            # If disease not found, try symptom
-            if "do not have information" in reply.lower():
-                diseases = get_diseases_by_symptom(incoming_msg)
-                if diseases:
-                    reply = f"🦠 The symptom '{incoming_msg}' is commonly seen in: {', '.join(diseases)}."
+            if disease_key:
+                reply = process_disease_query(incoming_msg)
+            else:
+                # Otherwise, try as symptom(s)
+                reply = process_symptom_query([incoming_msg])
 
         # TwiML response to Twilio
         twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
