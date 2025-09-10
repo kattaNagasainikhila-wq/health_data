@@ -1,5 +1,8 @@
-Flask
+Flask==3.0.3
+gunicorn==23.0.0
 requests
-google-cloud-dialogflow
-twilio
-gunicorn
+
+google-cloud-dialogflow==2.30.0
+google-auth==2.35.0
+
+twilio==9.3.1
