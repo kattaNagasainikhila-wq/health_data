@@ -157,7 +157,24 @@ def webhook():
         if disease_input:
             if isinstance(disease_input, list) and disease_input:
                 disease_input = disease_input[0]
-            response_text = process_disease_query(disease_input)
+
+            # --- intent-specific responses ---
+            if intent == "symptoms_info":
+                symptoms = get_symptoms(disease_input)
+                if symptoms:
+                    response_text = f"🤒 Symptoms of {disease_input}: {', '.join(symptoms)}."
+                else:
+                    response_text = f"Sorry, I don’t have symptom info for {disease_input}."
+            
+            elif intent == "preventions_info":
+                preventions = get_preventions(disease_input)
+                if preventions:
+                    response_text = f"🛡 Prevention for {disease_input}: {', '.join(preventions)}."
+                else:
+                    response_text = f"Sorry, I don’t have prevention info for {disease_input}."
+
+            else:  # default: both symptoms + preventions
+                response_text = process_disease_query(disease_input)
 
         # Case 2: Symptom to disease mapping
         elif intent == "symptoms_info":
